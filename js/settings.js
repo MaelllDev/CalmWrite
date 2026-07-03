@@ -123,7 +123,10 @@ window.CalmWrite = window.CalmWrite || {};
       els.toggleHighContrast.addEventListener('change', function(e) { self.set('highContrast', e.target.checked); });
     }
     if (els.toggleAnimations) {
-      els.toggleAnimations.addEventListener('change', function(e) { self.set('animationsEnabled', e.target.checked); });
+      els.toggleAnimations.addEventListener('change', function(e) {
+        // Invertido: checked = desativado, unchecked = ativado
+        self.set('animationsEnabled', !e.target.checked);
+      });
     }
     if (els.toggleSounds) {
       els.toggleSounds.addEventListener('change', function(e) {
@@ -295,7 +298,7 @@ window.CalmWrite = window.CalmWrite || {};
     
     if (els.toggleHideCursor) els.toggleHideCursor.checked = s.hideCursor;
     if (els.toggleHighContrast) els.toggleHighContrast.checked = s.highContrast;
-    if (els.toggleAnimations) els.toggleAnimations.checked = s.animationsEnabled;
+    if (els.toggleAnimations) els.toggleAnimations.checked = !s.animationsEnabled;
     if (els.toggleSounds) els.toggleSounds.checked = s.soundsEnabled;
     
     if (els.fontSizeSlider) {

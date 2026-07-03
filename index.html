@@ -160,7 +160,10 @@
       <span class="settings-group-title">Tipografia</span>
 
       <div class="settings-item">
-        <label class="settings-label" for="font-select">Fonte</label>
+        <label class="settings-label" for="font-select">
+          Fonte
+          <span class="info-icon" data-tip="Escolha a fonte que mais te agrada para ler. Atkinson Hyperlegible foi feita para alta legibilidade.">ⓘ</span>
+        </label>
         <select id="font-select" class="settings-select">
           <option value="atkinson">Atkinson Hyperlegible</option>
           <option value="inter">Inter</option>
@@ -170,12 +173,16 @@
       </div>
 
       <div class="settings-item">
-        <label class="settings-label" for="font-size-slider">Tamanho: <span id="font-size-label">1.13rem</span></label>
+        <label class="settings-label" for="font-size-slider">Tamanho: <span id="font-size-label">1.13rem</span>
+          <span class="info-icon" data-tip="Aumente ou diminua o tamanho da fonte para ficar mais confortável para seus olhos.">ⓘ</span>
+        </label>
         <input id="font-size-slider" class="range-slider" type="range" min="0.75" max="2" step="0.0625" value="1.125">
       </div>
 
       <div class="settings-item">
-        <label class="settings-label" for="line-height-slider">Espaçamento: <span id="line-height-label">1.75</span></label>
+        <label class="settings-label" for="line-height-slider">Espaçamento: <span id="line-height-label">1.75</span>
+          <span class="info-icon" data-tip="Espaçamento entre linhas. Maior = mais ar para respirar, menor = mais texto na tela.">ⓘ</span>
+        </label>
         <input id="line-height-slider" class="range-slider" type="range" min="1.2" max="2.5" step="0.05" value="1.75">
       </div>
     </div>
@@ -200,7 +207,10 @@
       </div>
 
       <div class="settings-item">
-        <label class="settings-label" for="toggle-animations">Desativar animações</label>
+        <label class="settings-label" for="toggle-animations">
+          Animações
+          <span class="info-icon" data-tip="Quando desativado, as transições entre blocos de texto ficam instantâneas (sem fade/slide)">ⓘ</span>
+        </label>
         <label class="toggle">
           <input id="toggle-animations" type="checkbox">
           <span class="toggle-slider"></span>
@@ -213,7 +223,10 @@
       <span class="settings-group-title">Som</span>
 
       <div class="settings-item">
-        <label class="settings-label" for="toggle-sounds">Ativar sons</label>
+        <label class="settings-label" for="toggle-sounds">
+          Ativar sons
+          <span class="info-icon" data-tip="Ativa ou desativa todos os sons de navegação (papel, clique, máquina de escrever)">ⓘ</span>
+        </label>
         <label class="toggle">
           <input id="toggle-sounds" type="checkbox" checked>
           <span class="toggle-slider"></span>
@@ -221,7 +234,10 @@
       </div>
 
       <div class="settings-item">
-        <label class="settings-label" for="sound-select">Tipo de som</label>
+        <label class="settings-label" for="sound-select">
+          Tipo de som
+          <span class="info-icon" data-tip="Escolhe o som tocado ao virar a página durante a leitura">ⓘ</span>
+        </label>
         <select id="sound-select" class="settings-select">
           <option value="paper">Papel</option>
           <option value="click">Click</option>
@@ -292,7 +308,10 @@
       </div>
 
       <div class="settings-item">
-        <label class="settings-label" for="toggle-hide-cursor">Ocultar cursor</label>
+        <label class="settings-label" for="toggle-hide-cursor">
+          Ocultar cursor
+          <span class="info-icon" data-tip="Esconde o mouse da tela durante a leitura — útil para não se distrair">ⓘ</span>
+        </label>
         <label class="toggle">
           <input id="toggle-hide-cursor" type="checkbox">
           <span class="toggle-slider"></span>
@@ -300,7 +319,10 @@
       </div>
 
       <div class="settings-item">
-        <label class="settings-label" for="toggle-high-contrast">Alto contraste</label>
+        <label class="settings-label" for="toggle-high-contrast">
+          Alto contraste
+          <span class="info-icon" data-tip="Aumenta o contraste entre texto e fundo para facilitar a leitura">ⓘ</span>
+        </label>
         <label class="toggle">
           <input id="toggle-high-contrast" type="checkbox">
           <span class="toggle-slider"></span>
@@ -341,6 +363,7 @@
   <script src="js/ui.js"></script>
   <script src="js/navigation.js"></script>
   <script src="js/settings.js"></script>
+  <script src="js/tutorial.js"></script>
   <script src="js/app.js"></script>
 
 </body>
