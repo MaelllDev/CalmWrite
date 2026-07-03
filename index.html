@@ -333,9 +333,15 @@
   <div id="toast" class="toast" role="alert" aria-live="polite"></div>
 
   <!-- ============================================================
-       SCRIPTS — Apenas o módulo principal (importa os demais)
+       SCRIPTS — Carregados em ordem (sem type=module para funcionar com file://)
        ============================================================ -->
-  <script type="module" src="js/app.js"></script>
+  <script src="js/storage.js"></script>
+  <script src="js/textProcessor.js"></script>
+  <script src="js/audio.js"></script>
+  <script src="js/ui.js"></script>
+  <script src="js/navigation.js"></script>
+  <script src="js/settings.js"></script>
+  <script src="js/app.js"></script>
 
 </body>
 </html>
