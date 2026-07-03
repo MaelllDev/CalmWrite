@@ -295,6 +295,38 @@
       </div>
     </div>
 
+    <!-- Spotify -->
+    <div class="settings-group">
+      <span class="settings-group-title">
+        Spotify
+        <span class="info-icon" data-tip="Cole o link de uma playlist do Spotify para tocar como música de fundo enquanto lê.">ⓘ</span>
+      </span>
+
+      <div id="spotify-embed-container" class="spotify-container"></div>
+
+      <div class="settings-item">
+        <label class="settings-label" for="spotify-url">URL da Playlist</label>
+        <input id="spotify-url" class="spotify-url-input" type="url" placeholder="https://open.spotify.com/playlist/..." value="https://open.spotify.com/playlist/37i9dQZF1DZ06evO3eIivx">
+      </div>
+
+      <div class="spotify-controls">
+        <button id="btn-spotify-play" class="btn btn--primary btn--small" aria-label="Tocar Spotify">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+          Tocar
+        </button>
+        <button id="btn-spotify-pause" class="btn btn--ghost btn--small" aria-label="Pausar Spotify">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>
+          Pausar
+        </button>
+        <button id="btn-spotify-stop" class="btn btn--ghost btn--small" aria-label="Parar Spotify">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><rect x="4" y="4" width="16" height="16" rx="2"/></svg>
+          Parar
+        </button>
+      </div>
+
+      <div id="spotify-status" class="spotify-status">⏸ Parado</div>
+    </div>
+
     <!-- Acessibilidade -->
     <div class="settings-group">
       <span class="settings-group-title">Acessibilidade</span>
@@ -360,6 +392,7 @@
   <script src="js/storage.js"></script>
   <script src="js/textProcessor.js"></script>
   <script src="js/audio.js"></script>
+  <script src="js/spotify.js"></script>
   <script src="js/ui.js"></script>
   <script src="js/navigation.js"></script>
   <script src="js/settings.js"></script>

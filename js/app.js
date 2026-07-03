@@ -21,6 +21,7 @@ window.CalmWrite = window.CalmWrite || {};
     CalmWrite.UI.initDOMElements();
     
     this._setupAudioInit();
+    this._setupSpotify();
     
     this.settings = new CalmWrite.SettingsManager();
     this.settings.init(CalmWrite.Storage.loadSettings());
@@ -46,6 +47,13 @@ window.CalmWrite = window.CalmWrite || {};
     }
     
     console.log('🧘 CalmWrite pronto para uso');
+  };
+
+  CalmWriteApp.prototype._setupSpotify = function() {
+    // Inicializar Spotify (carrega o script da API)
+    if (CalmWrite.spotifyManager) {
+      CalmWrite.spotifyManager.init();
+    }
   };
 
   CalmWriteApp.prototype._setupAudioInit = function() {

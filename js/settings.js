@@ -188,10 +188,15 @@ window.CalmWrite = window.CalmWrite || {};
       els.animTypeSelect.addEventListener('change', function(e) { self.set('animType', e.target.value); });
     }
     
+    // Ambient buttons - parar Spotify se estiver tocando
     var ambientBtns = CalmWrite.UI.ambientButtons;
     if (ambientBtns && ambientBtns.length) {
       Array.from(ambientBtns).forEach(function(btn) {
         btn.addEventListener('click', function() {
+          // Parar Spotify se estiver tocando
+          if (CalmWrite.spotifyManager && CalmWrite.spotifyManager.isPlaying) {
+            CalmWrite.spotifyManager.pauseOnly();
+          }
           var type = btn.dataset.ambient;
           if (CalmWrite.audioManager.toggleAmbient(type)) {
             self.set('ambientMusic', type);
@@ -202,7 +207,115 @@ window.CalmWrite = window.CalmWrite || {};
       });
     }
     
+    // Spotify bindings
+    self._bindSpotify();
+    
     document.addEventListener('keydown', this._handleEscape);
+  };
+
+  SettingsManager.prototype._bindSpotify = function() {
+    var self = this;
+    var spotify = CalmWrite.spotifyManager;
+    if (!spotify) return;
+
+    // URL input
+    var urlInput = document.getElementById('spotify-url');
+    var playBtn = document.getElementById('btn-spotify-play');
+    var pauseBtn = document.getElementById('btn-spotify-pause');
+    var stopBtn = document.getElementById('btn-spotify-stop');
+    var statusEl = document.getElementById('spotify-status');
+    var container = document.getElementById('spotify-embed-container');
+
+    // Set container
+    spotify.setContainer(container);
+
+    // Listen for URL changes (on Enter or blur)
+    if (urlInput) {
+      var loadUrl = function() {
+        var url = urlInput.value.trim();
+        if (url) {
+          spotify.loadUrl(url);
+          self.set('spotifyUrl', url);
+        }
+      };
+      urlInput.addEventListener('change', loadUrl);
+      urlInput.addEventListener('blur', loadUrl);
+      urlInput.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter') {
+          e.preventDefault();
+          loadUrl();
+        }
+      });
+    }
+
+    // Play button
+    if (playBtn) {
+      playBtn.addEventListener('click', function() {
+        // Parar audio ambiente
+        CalmWrite.audioManager.stopAmbient();
+        // Tocar Spotify
+        spotify.play();
+        self.set('ambientMusic', 'spotify');
+        self._updateSpotifyStatus('playing');
+      });
+    }
+
+    // Pause button
+    if (pauseBtn) {
+      pauseBtn.addEventListener('click', function() {
+        spotify.pauseOnly();
+        self._updateSpotifyStatus('paused');
+      });
+    }
+
+    // Stop button
+    if (stopBtn) {
+      stopBtn.addEventListener('click', function() {
+        spotify.stop();
+        self.set('ambientMusic', null);
+        self._updateSpotifyStatus('stopped');
+      });
+    }
+
+    // Listen to Spotify events
+    spotify.on('playbackStarted', function() {
+      CalmWrite.audioManager.stopAmbient();
+      self._updateSpotifyStatus('playing');
+    });
+
+    spotify.on('playbackUpdate', function(data) {
+      if (data.isPaused) {
+        self._updateSpotifyStatus('paused');
+      } else {
+        self._updateSpotifyStatus('playing');
+      }
+    });
+
+    // Restore URL from settings
+    var savedUrl = self.get('spotifyUrl');
+    if (savedUrl && urlInput) {
+      urlInput.value = savedUrl;
+      spotify.currentUrl = savedUrl;
+    }
+  };
+
+  SettingsManager.prototype._updateSpotifyStatus = function(state) {
+    var statusEl = document.getElementById('spotify-status');
+    if (!statusEl) return;
+
+    statusEl.classList.remove('spotify-status--playing');
+
+    switch (state) {
+      case 'playing':
+        statusEl.textContent = '▶ Tocando Spotify';
+        statusEl.classList.add('spotify-status--playing');
+        break;
+      case 'paused':
+        statusEl.textContent = '⏸ Pausado';
+        break;
+      default:
+        statusEl.textContent = '⏹ Parado';
+    }
   };
 
   SettingsManager.prototype._handleFullscreen = function(e) {

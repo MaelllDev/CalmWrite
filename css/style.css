@@ -1288,6 +1288,84 @@ body {
 }
 
 /* ============================================================
+   SPOTIFY
+   ============================================================ */
+.spotify-container {
+  width: 100%;
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  background: var(--bg-tertiary);
+  min-height: 80px;
+  transition: all var(--anim-normal) var(--anim-ease);
+}
+
+.spotify-container iframe {
+  border-radius: var(--radius-sm);
+}
+
+.spotify-url-input {
+  flex: 1;
+  min-width: 0;
+  padding: var(--space-sm) var(--space-md);
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  color: var(--text-primary);
+  font-family: var(--font-body);
+  font-size: var(--font-size-xs);
+  outline: none;
+  transition: border-color var(--anim-fast) var(--anim-ease);
+}
+
+.spotify-url-input:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-glow);
+}
+
+.spotify-url-input::placeholder {
+  color: var(--text-muted);
+}
+
+.spotify-controls {
+  display: flex;
+  gap: var(--space-sm);
+  flex-wrap: wrap;
+}
+
+.btn--small {
+  padding: var(--space-xs) var(--space-md);
+  font-size: var(--font-size-xs);
+  border-radius: var(--radius-sm);
+  gap: 4px;
+}
+
+.btn--small svg {
+  width: 14px;
+  height: 14px;
+}
+
+.spotify-status {
+  font-size: var(--font-size-xs);
+  color: var(--text-tertiary);
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+}
+
+.spotify-status--playing {
+  color: var(--success);
+}
+
+.spotify-status--playing::before {
+  content: '';
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--success);
+  animation: pulse-dot 1s ease-in-out infinite;
+}
+
+/* ============================================================
    FOCUS VISIBLE
    ============================================================ */
 :focus-visible {

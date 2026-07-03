@@ -161,6 +161,18 @@ window.CalmWrite = window.CalmWrite || {};
     if (!this.isReady()) return;
     this.resume();
     this.stopAmbient();
+    
+    // Parar Spotify se estiver tocando
+    if (window.CalmWrite && CalmWrite.spotifyManager) {
+      CalmWrite.spotifyManager.pauseOnly();
+      // Atualizar status na UI
+      var statusEl = document.getElementById('spotify-status');
+      if (statusEl) {
+        statusEl.classList.remove('spotify-status--playing');
+        statusEl.textContent = '⏸ Spotify pausado';
+      }
+    }
+    
     this.activeAmbient = type;
 
     switch (type) {
