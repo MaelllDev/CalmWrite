@@ -11,6 +11,16 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400;1,700&family=IBM+Plex+Sans:wght@300;400;500;600&family=Inter:wght@200;300;400;500;600&family=Nunito:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
+  <script>
+    // Aplicar tema salvo ANTES do CSS carregar para evitar flicker no F5
+    try {
+      var saved = JSON.parse(localStorage.getItem('calmwrite_settings'));
+      if (saved && saved.theme) {
+        document.documentElement.dataset.theme = saved.theme;
+      }
+    } catch(e){}
+  </script>
+
   <!-- Estilos -->
   <link rel="stylesheet" href="css/style.css">
 
@@ -46,12 +56,28 @@
       Copie seus textos com calma e concentração.
     </p>
 
-    <button id="btn-start-reading" class="btn btn--primary" aria-label="Começar a leitura">
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <polygon points="5 3 19 12 5 21 5 3"/>
+    <div id="session-indicator" class="home-session-indicator">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/>
       </svg>
-      Começar
-    </button>
+      <span>Sessão anterior disponível</span>
+      <span id="session-timer" class="session-timer"></span>
+    </div>
+
+    <div class="home-buttons">
+      <button id="btn-resume-reading" class="btn btn--primary home-btn-resume" aria-label="Continuar leitura">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polygon points="5 3 19 12 5 21 5 3"/>
+        </svg>
+        Continuar
+      </button>
+      <button id="btn-start-reading" class="btn btn--ghost" aria-label="Começar nova leitura">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+        </svg>
+        Novo texto
+      </button>
+    </div>
 
     <a href="https://pixgg.com/maelldev" target="_blank" rel="noopener noreferrer" class="home-support" aria-label="Apoiar o projeto">
       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -268,6 +294,17 @@
         <input id="words-per-block-slider" class="range-slider" type="range" min="0" max="500" step="1" value="0">
       </div>
 
+      <div class="settings-item">
+        <label class="settings-label" for="toggle-editor-mode">
+          Modo editor
+          <span class="info-icon" data-tip="Mostra botões para editar texto, editar bloco e baixar TXT durante a leitura. Desative para uma experiência mais limpa.">ⓘ</span>
+        </label>
+        <label class="toggle">
+          <input id="toggle-editor-mode" type="checkbox" checked>
+          <span class="toggle-slider"></span>
+        </label>
+      </div>
+
     <!-- Animações -->
     <div class="settings-group">
       <span class="settings-group-title">Animações</span>
@@ -430,6 +467,25 @@
           <input id="toggle-high-contrast" type="checkbox">
           <span class="toggle-slider"></span>
         </label>
+      </div>
+
+      <div class="settings-divider"></div>
+
+      <div class="settings-group" style="gap: var(--space-sm);">
+      <button id="btn-clear-session" class="settings-danger-btn">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="3 6 5 6 21 6"/>
+          <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+        </svg>
+        Limpar sessão
+      </button>
+      <button id="btn-reset-settings" class="settings-danger-btn">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M1 4v6h6M23 20v-6h-6"/>
+          <path d="M20.49 9A9 9 0 0 0 5.64 5.64L1 10m22 4l-4.64 4.36A9 9 0 0 1 3.51 15"/>
+        </svg>
+        Restaurar configurações
+      </button>
       </div>
     </div>
 

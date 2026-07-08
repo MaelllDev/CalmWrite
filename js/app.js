@@ -150,6 +150,16 @@ window.CalmWrite = window.CalmWrite || {};
       els.btnResumeNo.addEventListener('click', function() { self._resumeSession(false); });
     }
 
+    // Botão continuar sessão
+    var btnResumeReading = document.getElementById('btn-resume-reading');
+    if (btnResumeReading) {
+      btnResumeReading.addEventListener('click', function() {
+        if (CalmWrite.Storage.hasPreviousSession()) {
+          CalmWrite.UI.openResumeModal();
+        }
+      });
+    }
+
     // Botão sair da leitura
     var btnExitReading = document.getElementById('btn-exit-reading');
     if (btnExitReading) {
@@ -201,6 +211,33 @@ window.CalmWrite = window.CalmWrite || {};
     if (logoContainer) {
       // Usar a logo real do assets
       logoContainer.innerHTML = '<img src="assets/icons/logo1024.svg" alt="CalmWrite" width="80" height="80" style="width:80px;height:80px">';
+    }
+    this._updateSessionIndicator();
+    // Atualizar timer a cada 30s
+    var self = this;
+    clearInterval(this._sessionTimerInterval);
+    this._sessionTimerInterval = setInterval(function() {
+      self._updateSessionIndicator();
+    }, 30000);
+  };
+
+  CalmWriteApp.prototype._updateSessionIndicator = function() {
+    var indicator = document.getElementById('session-indicator');
+    var timer = document.getElementById('session-timer');
+    var btnResume = document.getElementById('btn-resume-reading');
+    if (!indicator) return;
+    
+    if (CalmWrite.Storage.hasPreviousSession()) {
+      indicator.style.display = 'inline-flex';
+      if (btnResume) btnResume.style.display = 'inline-flex';
+      if (timer) {
+        var remaining = CalmWrite.Storage.getSessionTimeRemainingFormatted();
+        timer.textContent = '· expira em ' + remaining;
+      }
+    } else {
+      indicator.style.display = 'none';
+      if (btnResume) btnResume.style.display = 'none';
+      clearInterval(this._sessionTimerInterval);
     }
   };
 
@@ -366,13 +403,17 @@ window.CalmWrite = window.CalmWrite || {};
   CalmWriteApp.prototype._exitReadingMode = function() {
     this.isReading = false;
     this.navigation.destroy();
-    CalmWrite.Storage.clearSession();
+    // Salvar sessão antes de sair (não limpar — usuário pode continuar depois)
+    this._autoSave(this.navigation ? this.navigation.currentIndex : 0);
     CalmWrite.audioManager.stopAmbient();
     CalmWrite.UI.switchScreen(CalmWrite.UI.elements.readingScreen, CalmWrite.UI.elements.homeScreen);
     
     if (CalmWrite.UI.elements.textInput) {
       CalmWrite.UI.elements.textInput.value = '';
     }
+    
+    // Atualizar indicador de sessão na home
+    this._updateSessionIndicator();
   };
 
   CalmWriteApp.prototype._autoSave = function(currentIndex) {

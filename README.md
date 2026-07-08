@@ -37,15 +37,17 @@ Ideal para:
 ## 🚀 Como usar
 
 1. **Abra o `index.html`** em qualquer navegador moderno (ou sirva com Live Server)
-2. Clique em **"Começar"**
+2. Clique em **"Novo texto"** (ou **"Continuar"** se houver sessão salva)
 3. Cole ou digite seu texto no modal
 4. Clique em **"Começar"** novamente
 5. Leia um bloco por vez, navegando com:
    - `→` `Espaço` `Enter` — próximo bloco
    - `←` `Backspace` — bloco anterior
-   - `Esc` — sair da leitura
+   - `Esc` — sair da leitura (sessão é preservada)
    - Clique nas laterais da tela para navegar
    - Botão **"Sair"** na barra de progresso para voltar ao início
+
+**Sessão salva automaticamente** — feche e abra de novo, a leitura continua de onde parou (expira em 24h).
 
 ---
 
@@ -61,6 +63,7 @@ Ideal para:
 - **📝 Editar texto** — abre o modal com o texto completo para editar no meio da leitura
 - **✏️ Editar bloco** — edita apenas o parágrafo visível (contentEditable com um clique)
 - **💾 Baixar TXT** — baixa o texto completo como arquivo `.txt` com um clique
+- **🔘 Modo editor** — toggle nas Configurações para mostrar/ocultar a toolbar de edição
 
 ### 🎨 Personalização
 - **5 temas:** Escuro, Claro, Sépia, Azul Escuro (Navy) e Azul Claro (Sky)
@@ -92,7 +95,9 @@ Ideal para:
 ### 💾 Salvamento automático
 - Progresso salvo no **LocalStorage**
 - Ao reabrir, pergunta se deseja **continuar de onde parou**
-- Sessões expiram após 24h
+- Indicador na home com **tempo restante** (expira em 24h)
+- Botão **"Continuar"** grande na tela inicial quando há sessão salva
+- Botão **"Limpar sessão"** nas Configurações para resetar manualmente
 
 ### 💝 Apoiar o projeto
 - Link para [PixGG](https://pixgg.com/maelldev) na tela inicial
@@ -104,6 +109,11 @@ Ideal para:
 - Fontes de alta legibilidade (Atkinson Hyperlegible)
 - `aria-live`, `aria-label` e semântica HTML
 - Edição de texto inline durante a leitura
+- Modo editor configurável (oculta ferramentas de edição)
+
+### 🔧 Utilitários
+- **Restaurar configurações** — volta todas as configs aos padrões de fábrica
+- **Limpar sessão** — remove o progresso salvo manualmente
 
 ---
 

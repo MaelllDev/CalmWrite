@@ -28,6 +28,7 @@ window.CalmWrite = window.CalmWrite || {};
     spotifyUrl: '',
     spotifyVisible: true,
     wordsPerBlock: 0,
+    editorEnabled: true,
   };
 
   function SettingsManager() {
@@ -133,8 +134,7 @@ window.CalmWrite = window.CalmWrite || {};
     }
     if (els.toggleAnimations) {
       els.toggleAnimations.addEventListener('change', function(e) {
-        // Invertido: checked = desativado, unchecked = ativado
-        self.set('animationsEnabled', !e.target.checked);
+        self.set('animationsEnabled', e.target.checked);
       });
     }
     if (els.toggleSounds) {
@@ -232,6 +232,39 @@ window.CalmWrite = window.CalmWrite || {};
     if (els.toggleSpotifyVisible) {
       els.toggleSpotifyVisible.addEventListener('change', function(e) {
         self.set('spotifyVisible', e.target.checked);
+      });
+    }
+
+    if (els.toggleEditorMode) {
+      els.toggleEditorMode.addEventListener('change', function(e) {
+        self.set('editorEnabled', e.target.checked);
+      });
+    }
+
+    // Limpar sessão
+    var btnResetSettings = document.getElementById('btn-reset-settings');
+    if (btnResetSettings) {
+      btnResetSettings.addEventListener('click', function() {
+        if (!confirm('Tem certeza? Todas as configurações serão restauradas para o padrão.')) return;
+        var defaults = Object.assign({}, DEFAULT_SETTINGS);
+        self.setMultiple(defaults);
+        CalmWrite.UI.showToast('Configurações restauradas!');
+      });
+    }
+
+    // Limpar sessão
+    var btnClearSession = document.getElementById('btn-clear-session');
+    if (btnClearSession) {
+      btnClearSession.addEventListener('click', function() {
+        if (!confirm('Tem certeza que deseja limpar a sessão?\nO progresso da leitura atual será perdido.')) return;
+        CalmWrite.Storage.clearSession();
+        CalmWrite.Storage.saveOriginalText('');
+        CalmWrite.UI.showToast('Sessão limpa com sucesso!');
+        // Esconder indicador e botão continuar na home
+        var indicator = document.getElementById('session-indicator');
+        if (indicator) indicator.style.display = 'none';
+        var btnResume = document.getElementById('btn-resume-reading');
+        if (btnResume) btnResume.style.display = 'none';
       });
     }
     
@@ -361,6 +394,9 @@ window.CalmWrite = window.CalmWrite || {};
       case 'soundType':
       case 'animType':
         break;
+      case 'editorEnabled':
+        this._applyEditorMode(value);
+        break;
       case 'spotifyVisible':
         this._applySpotifyVisibility(value);
         break;
@@ -377,6 +413,12 @@ window.CalmWrite = window.CalmWrite || {};
     } else if (this.settings.spotifyUrl) {
       miniPlayer.classList.remove('mini-player--hidden');
     }
+  };
+
+  SettingsManager.prototype._applyEditorMode = function(enabled) {
+    var toolbar = document.querySelector('.reading-toolbar');
+    if (!toolbar) return;
+    toolbar.style.display = enabled ? '' : 'none';
   };
 
   SettingsManager.prototype._applyFont = function(fontFamily) {
@@ -410,7 +452,7 @@ window.CalmWrite = window.CalmWrite || {};
     
     if (els.toggleHideCursor) els.toggleHideCursor.checked = s.hideCursor;
     if (els.toggleHighContrast) els.toggleHighContrast.checked = s.highContrast;
-    if (els.toggleAnimations) els.toggleAnimations.checked = !s.animationsEnabled;
+    if (els.toggleAnimations) els.toggleAnimations.checked = s.animationsEnabled;
     if (els.toggleSounds) els.toggleSounds.checked = s.soundsEnabled;
     
     if (els.fontSizeSlider) {
@@ -451,6 +493,7 @@ window.CalmWrite = window.CalmWrite || {};
     }
     
     if (els.toggleSpotifyVisible) els.toggleSpotifyVisible.checked = s.spotifyVisible;
+    if (els.toggleEditorMode) els.toggleEditorMode.checked = s.editorEnabled;
     
     var ambientBtns = CalmWrite.UI.ambientButtons;
     if (ambientBtns && ambientBtns.length) {

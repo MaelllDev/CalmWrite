@@ -91,6 +91,33 @@ window.CalmWrite = window.CalmWrite || {};
         return false;
       }
       return true;
+    },
+
+    /** Retorna o tempo restante da sessão em ms, ou 0 se não houver sessão */
+    getSessionTimeRemaining() {
+      const session = this.loadSession();
+      if (!session || !session.timestamp) return 0;
+      const MAX_AGE = 24 * 60 * 60 * 1000;
+      const elapsed = Date.now() - session.timestamp;
+      return Math.max(0, MAX_AGE - elapsed);
+    },
+
+    /** Retorna o tempo restante formatado (ex: "23h 42min" ou "5min") */
+    getSessionTimeRemainingFormatted() {
+      var ms = this.getSessionTimeRemaining();
+      if (ms <= 0) return '';
+      
+      var totalSec = Math.floor(ms / 1000);
+      var hours = Math.floor(totalSec / 3600);
+      var minutes = Math.floor((totalSec % 3600) / 60);
+      
+      if (hours > 0) {
+        return hours + 'h ' + minutes + 'min';
+      }
+      if (minutes > 0) {
+        return minutes + 'min';
+      }
+      return 'menos de 1 min';
     }
   };
 
