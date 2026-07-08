@@ -222,6 +222,7 @@ window.CalmWrite = window.CalmWrite || {};
           } else {
             self.set('ambientMusic', null);
           }
+          self._syncUI();
         });
       });
     }
