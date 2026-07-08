@@ -616,7 +616,6 @@ body {
   text-align: left;
   position: relative;
   padding: var(--space-xl) 0;
-  transition: opacity var(--anim-normal) var(--anim-ease);
 }
 
 .reading-block--enter {
@@ -1288,7 +1287,7 @@ body {
 }
 
 /* ============================================================
-   REDUCED MOTION
+   REDUCED MOTION & ANIMATIONS OFF
    ============================================================ */
 @media (prefers-reduced-motion: reduce) {
   *,
@@ -1298,6 +1297,13 @@ body {
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
   }
+}
+
+[data-animations-enabled="false"] *,
+[data-animations-enabled="false"] *::before,
+[data-animations-enabled="false"] *::after {
+  transition-duration: 0.01ms !important;
+  animation-duration: 0.01ms !important;
 }
 
 /* ============================================================

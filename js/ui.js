@@ -210,39 +210,100 @@ window.CalmWrite = window.CalmWrite || {};
     },
 
     showReadingBlock: function(text, animType) {
-      animType = animType || 'fade';
       var block = document.getElementById('reading-block');
       if (!block) return;
       
       block.textContent = text;
       
-      var animSpeed = parseFloat(document.documentElement.dataset.animSpeed || '1');
-      var duration = 300 * animSpeed;
+      // Cancelar animação RAF anterior se existir
+      if (block._rafId) {
+        cancelAnimationFrame(block._rafId);
+        block._rafId = null;
+      }
       
-      block.style.opacity = '0';
+      // Limpar estilos inline residuais
+      block.style.opacity = '1';
       block.style.transform = '';
       block.style.filter = '';
       
-      void block.offsetWidth;
+      // Respeitar configuração de animações desativadas
+      var animationsEnabled = document.documentElement.dataset.animationsEnabled !== 'false';
+      
+      if (!animationsEnabled) {
+        return;
+      }
+      
+      animType = animType || 'fade';
+      var animSpeed = parseFloat(document.documentElement.dataset.animSpeed || '1');
+      var duration = 300 * animSpeed;
+      
+      // --- Animação 100% JS pura ---
+      // Não usa CSS transitions, nem Web Animations API.
+      // Loop manual com requestAnimationFrame que interpola
+      // os valores a cada frame. Imune a prefers-reduced-motion.
+      
+      var startTime = performance.now();
+      
+      // Estado inicial e alvo
+      var fromOpacity = 0;
+      var fromY = 0;
+      var fromScale = 1;
+      var fromBlur = 0;
       
       switch (animType) {
         case 'slide':
-          block.style.transform = 'translateY(20px)';
+          fromY = 20;
           break;
         case 'scale':
-          block.style.transform = 'scale(0.95)';
+          fromScale = 0.95;
           break;
         case 'blur':
-          block.style.filter = 'blur(4px)';
+          fromBlur = 4;
           break;
       }
       
-      requestAnimationFrame(function() {
-        block.style.transition = 'opacity ' + duration + 'ms ease, transform ' + duration + 'ms ease, filter ' + duration + 'ms ease';
-        block.style.opacity = '1';
-        block.style.transform = 'translateY(0)';
-        block.style.filter = 'blur(0)';
-      });
+      // Aplicar estado inicial imediatamente
+      block.style.opacity = fromOpacity;
+      block.style.transform = fromScale !== 1 ? 'scale(' + fromScale + ')' : (fromY !== 0 ? 'translateY(' + fromY + 'px)' : '');
+      block.style.filter = fromBlur > 0 ? 'blur(' + fromBlur + 'px)' : '';
+      
+      function easeOutCubic(t) {
+        return 1 - Math.pow(1 - t, 3);
+      }
+      
+      function step(now) {
+        var elapsed = now - startTime;
+        var progress = Math.min(elapsed / duration, 1);
+        var eased = easeOutCubic(progress);
+        
+        // Opacidade: de 0 até 1
+        block.style.opacity = fromOpacity + (1 - fromOpacity) * eased;
+        
+        // Transform: animar Y e/ou Scale
+        var currentY = fromY * (1 - eased);
+        var currentScale = fromScale + (1 - fromScale) * eased;
+        var transformParts = [];
+        if (fromY !== 0) transformParts.push('translateY(' + currentY + 'px)');
+        if (fromScale !== 1) transformParts.push('scale(' + currentScale + ')');
+        block.style.transform = transformParts.join(' ');
+        
+        // Blur
+        if (fromBlur > 0) {
+          block.style.filter = 'blur(' + (fromBlur * (1 - eased)) + 'px)';
+        }
+        
+        if (progress < 1) {
+          block._rafId = requestAnimationFrame(step);
+        } else {
+          // Finalizar no estado exato
+          block.style.opacity = '1';
+          block.style.transform = '';
+          block.style.filter = '';
+          block._rafId = null;
+        }
+      }
+      
+      block._rafId = requestAnimationFrame(step);
     }
   };
 
