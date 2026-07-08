@@ -236,14 +236,12 @@ window.CalmWrite = window.CalmWrite || {};
     if (!spotify) return;
 
     var urlInput = document.getElementById('spotify-url');
-    var container = document.getElementById('spotify-embed-container');
     var miniPlayer = document.getElementById('spotify-mini-player');
     var miniContainer = document.getElementById('spotify-mini-embed');
     var miniClose = document.getElementById('btn-mini-close-spotify');
 
-    // Set containers
-    spotify.setContainer(container);
-    spotify.setMiniContainer(miniContainer);
+    // Set container do player flutuante
+    spotify.setContainer(miniContainer);
 
     // Carrega iframe quando URL muda
     function loadUrl(url) {

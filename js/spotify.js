@@ -14,21 +14,13 @@ window.CalmWrite = window.CalmWrite || {};
   function SpotifyManager() {
     this.currentUrl = '';
     this._container = null;
-    this._miniContainer = null;
   }
 
   /**
-   * Define o container principal (painel settings)
+   * Define o container do player flutuante
    */
   SpotifyManager.prototype.setContainer = function(element) {
     this._container = element;
-  };
-
-  /**
-   * Define o container do mini player (tela de leitura)
-   */
-  SpotifyManager.prototype.setMiniContainer = function(element) {
-    this._miniContainer = element;
   };
 
   /**
@@ -74,27 +66,21 @@ window.CalmWrite = window.CalmWrite || {};
   SpotifyManager.prototype.load = function(url) {
     this.currentUrl = url || '';
 
-    // Atualizar container principal (settings)
+    // Atualizar player flutuante
     if (this._container) {
-      this._createIframe(this._container, '152');
-    }
-
-    // Atualizar mini player (tela de leitura)
-    if (this._miniContainer) {
       if (this.currentUrl) {
-        this._createIframe(this._miniContainer, '152');
+        this._createIframe(this._container, '152');
       } else {
-        this._miniContainer.innerHTML = '';
+        this._container.innerHTML = '';
       }
     }
   };
 
   /**
-   * Limpa os iframes
+   * Limpa o player
    */
   SpotifyManager.prototype.clear = function() {
     if (this._container) this._container.innerHTML = '';
-    if (this._miniContainer) this._miniContainer.innerHTML = '';
   };
 
   window.CalmWrite.SpotifyManager = SpotifyManager;
