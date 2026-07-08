@@ -121,6 +121,14 @@ window.CalmWrite = window.CalmWrite || {};
       els.btnResumeNo.addEventListener('click', function() { self._resumeSession(false); });
     }
 
+    // Botão voltar do parabéns
+    var congratsBtn = document.getElementById('btn-congrats-home');
+    if (congratsBtn) {
+      congratsBtn.addEventListener('click', function() {
+        self._closeCongratulations();
+      });
+    }
+
     document.addEventListener('keydown', function(e) {
       if (e.key === 'F11') {
         e.preventDefault();
@@ -159,7 +167,12 @@ window.CalmWrite = window.CalmWrite || {};
     this.originalText = rawText;
     CalmWrite.Storage.saveOriginalText(rawText);
     
-    var blocks = CalmWrite.TextProcessor.processText(rawText);
+    // Passar palavras por bloco diretamente
+    var wordsPerBlock = 0;
+    if (this.settings) {
+      wordsPerBlock = this.settings.get('wordsPerBlock') || 0;
+    }
+    var blocks = CalmWrite.TextProcessor.processText(rawText, { wordsPerBlock: wordsPerBlock });
     
     if (!blocks || blocks.length === 0) {
       CalmWrite.UI.showToast('Não foi possível processar o texto');
@@ -204,10 +217,28 @@ window.CalmWrite = window.CalmWrite || {};
   };
 
   CalmWriteApp.prototype._onReadingFinished = function() {
-    this._exitReadingMode();
-    CalmWrite.UI.showToast('Leitura finalizada! 📖');
+    this.isReading = false;
+    this.navigation.destroy();
+    CalmWrite.Storage.clearSession();
+    CalmWrite.audioManager.stopAmbient();
+    
+    // Mostrar modal de parabéns
+    CalmWrite.UI.showCongratulations();
+    
     if (this.settings) {
       this.settings.syncUI();
+    }
+  };
+
+  /**
+   * Fecha o modal de parabéns e volta pra home
+   */
+  CalmWriteApp.prototype._closeCongratulations = function() {
+    CalmWrite.UI.closeCongratulations();
+    CalmWrite.UI.switchScreen(CalmWrite.UI.elements.readingScreen, CalmWrite.UI.elements.homeScreen);
+    
+    if (CalmWrite.UI.elements.textInput) {
+      CalmWrite.UI.elements.textInput.value = '';
     }
   };
 

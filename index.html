@@ -360,12 +360,32 @@
   </div>
 
   <!-- ============================================================
+       CONGRATULATIONS MODAL
+       ============================================================ -->
+  <div id="congrats-overlay" class="modal-overlay congrats-modal" role="dialog" aria-modal="true" aria-labelledby="congrats-title">
+    <div class="modal congrats-modal-content">
+      <div class="congrats-emoji">🎉</div>
+      <h2 id="congrats-title" class="congrats-title">Parabéns!</h2>
+      <p class="congrats-text">Você leu o texto completo!</p>
+      <div class="congrats-stats" id="congrats-stats"></div>
+      <button id="btn-congrats-home" class="btn btn--primary congrats-btn">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+          <polyline points="9 22 9 12 15 12 15 22"/>
+        </svg>
+        Voltar ao início
+      </button>
+    </div>
+  </div>
+
+  <!-- ============================================================
        SPOTIFY FLOATING MINI PLAYER
        ============================================================ -->
   <div id="spotify-mini-player" class="mini-player mini-player--hidden">
     <div class="mini-player-header">
       <span class="mini-player-icon">🎵</span>
       <span class="mini-player-title">Spotify</span>
+      <span class="mini-player-volume-hint">🔊 volume</span>
       <button id="btn-mini-close-spotify" class="mini-player-close" aria-label="Fechar Spotify" title="Fechar">×</button>
     </div>
     <div id="spotify-mini-embed" class="mini-player-embed"></div>

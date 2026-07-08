@@ -280,7 +280,11 @@ window.CalmWrite = window.CalmWrite || {};
   }
 
   window.CalmWrite.TextProcessor = {
-    processText: function(rawText) {
+    /**
+     * Processa texto e divide em blocos.
+     * Aceita wordsPerBlock como parâmetro (se não for passado, lê das configurações)
+     */
+    processText: function(rawText, options) {
       if (!rawText || typeof rawText !== 'string') {
         return [];
       }
@@ -309,9 +313,11 @@ window.CalmWrite = window.CalmWrite || {};
           .trim();
       }).filter(function(p) { return p.length > 0; });
 
-      // Get wordsPerBlock from settings (from global CalmWrite settings if available)
+      // Words per block: aceita como parâmetro ou lê das configurações globais
       var wordsPerBlock = 0;
-      if (window.CalmWrite && CalmWrite.settingsManager) {
+      if (options && typeof options.wordsPerBlock !== 'undefined') {
+        wordsPerBlock = options.wordsPerBlock;
+      } else if (window.CalmWrite && CalmWrite.settingsManager) {
         wordsPerBlock = CalmWrite.settingsManager.get('wordsPerBlock') || 0;
       }
 
