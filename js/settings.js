@@ -360,8 +360,10 @@ window.CalmWrite = window.CalmWrite || {};
       case 'ambientMusic':
       case 'soundType':
       case 'animType':
+        break;
       case 'spotifyVisible':
         this._applySpotifyVisibility(value);
+        break;
     }
   };
 
