@@ -5,6 +5,7 @@
    - Detecção de parágrafos por linhas em branco
    - Limpeza e normalização
    - Divisão inteligente sem quebrar palavras
+   - Suporte a limite de palavras por bloco
    ============================================================ */
 
 window.CalmWrite = window.CalmWrite || {};
@@ -15,8 +16,14 @@ window.CalmWrite = window.CalmWrite || {};
   const COMFORTABLE_MAX_LENGTH = 280;
   const ABSOLUTE_MAX_LENGTH = 500;
 
-  function smartSplit(paragraph) {
+  function smartSplit(paragraph, wordsPerBlock) {
     const length = paragraph.length;
+    wordsPerBlock = wordsPerBlock || 0;
+
+    // If using wordsPerBlock mode, split by word count
+    if (wordsPerBlock > 0) {
+      return splitByWords(paragraph, wordsPerBlock);
+    }
 
     if (length <= COMFORTABLE_MAX_LENGTH) {
       return [paragraph];
@@ -70,6 +77,71 @@ window.CalmWrite = window.CalmWrite || {};
     }
 
     return [paragraph];
+  }
+
+  /**
+   * Divide o texto em blocos com no máximo `maxWords` palavras cada,
+   * preferindo quebrar em sentenças, depois vírgulas, depois espaços.
+   */
+  function splitByWords(text, maxWords) {
+    if (!text || !text.trim()) return [''];
+    
+    var words = text.trim().split(/\s+/);
+    if (words.length <= maxWords) return [text.trim()];
+    
+    // Try to split by sentences first (respecting word limit)
+    var sentences = splitBySentenceEndings(text);
+    
+    // Try to group sentences into word-limited chunks
+    var result = [];
+    var currentChunk = [];
+    var currentCount = 0;
+    
+    for (var i = 0; i < sentences.length; i++) {
+      var sentenceWords = sentences[i].split(/\s+/).length;
+      
+      if (currentCount + sentenceWords <= maxWords) {
+        currentChunk.push(sentences[i]);
+        currentCount += sentenceWords;
+      } else {
+        // Flush current chunk
+        if (currentChunk.length > 0) {
+          result.push(currentChunk.join(' '));
+        }
+        
+        // If the sentence itself exceeds maxWords, split it further
+        if (sentenceWords > maxWords) {
+          var subBlocks = splitWordsForce(sentences[i], maxWords);
+          for (var j = 0; j < subBlocks.length; j++) {
+            result.push(subBlocks[j]);
+          }
+          currentChunk = [];
+          currentCount = 0;
+        } else {
+          currentChunk = [sentences[i]];
+          currentCount = sentenceWords;
+        }
+      }
+    }
+    
+    if (currentChunk.length > 0) {
+      result.push(currentChunk.join(' '));
+    }
+    
+    return result.length > 0 ? result : [text.trim()];
+  }
+
+  /**
+   * Força a divisão de um texto em blocos de no máximo maxWords palavras,
+   * quebrando em espaços quando necessário.
+   */
+  function splitWordsForce(text, maxWords) {
+    var words = text.trim().split(/\s+/);
+    var result = [];
+    for (var i = 0; i < words.length; i += maxWords) {
+      result.push(words.slice(i, i + maxWords).join(' '));
+    }
+    return result;
   }
 
   function splitBySentenceEndings(text) {
@@ -237,13 +309,22 @@ window.CalmWrite = window.CalmWrite || {};
           .trim();
       }).filter(function(p) { return p.length > 0; });
 
+      // Get wordsPerBlock from settings (from global CalmWrite settings if available)
+      var wordsPerBlock = 0;
+      if (window.CalmWrite && CalmWrite.settingsManager) {
+        wordsPerBlock = CalmWrite.settingsManager.get('wordsPerBlock') || 0;
+      }
+
       var blocks = [];
       for (var i = 0; i < paragraphs.length; i++) {
-        var splitBlocks = smartSplit(paragraphs[i]);
+        var splitBlocks = smartSplit(paragraphs[i], wordsPerBlock);
         Array.prototype.push.apply(blocks, splitBlocks);
       }
 
       return blocks;
     }
   };
+
+  // Store reference to settings for textProcessor
+  // (settings.js will set CalmWrite.settingsManager after init)
 })();

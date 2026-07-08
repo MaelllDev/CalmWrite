@@ -67,6 +67,26 @@
       </div>
     </div>
 
+    <!-- Mini Player Spotify -->
+    <div id="spotify-mini-player" class="mini-player mini-player--hidden">
+      <div class="mini-player-info">
+        <span class="mini-player-icon">🎵</span>
+        <span class="mini-player-status" id="mini-spotify-status">Spotify</span>
+      </div>
+      <div class="mini-player-controls">
+        <button id="mini-spotify-prev" class="mini-player-btn" aria-label="Anterior" title="Anterior">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><polygon points="19 20 9 12 19 4 19 20"/><line x1="5" y1="19" x2="5" y2="5" stroke="currentColor" stroke-width="2"/></svg>
+        </button>
+        <button id="mini-spotify-toggle" class="mini-player-btn mini-player-btn--play" aria-label="Tocar/Pausar" title="Tocar/Pausar">
+          <svg id="mini-spotify-play-icon" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+          <svg id="mini-spotify-pause-icon" width="18" height="18" viewBox="0 0 24 24" fill="currentColor" style="display:none"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>
+        </button>
+        <button id="mini-spotify-stop" class="mini-player-btn" aria-label="Parar" title="Parar">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><rect x="4" y="4" width="16" height="16" rx="2"/></svg>
+        </button>
+      </div>
+    </div>
+
     <!-- Barra de progresso -->
     <div id="progress-bar" class="progress-bar-container">
       <div class="progress-track">
@@ -186,6 +206,17 @@
         <input id="line-height-slider" class="range-slider" type="range" min="1.2" max="2.5" step="0.05" value="1.75">
       </div>
     </div>
+
+    <!-- Leitura -->
+    <div class="settings-group">
+      <span class="settings-group-title">Leitura</span>
+
+      <div class="settings-item">
+        <label class="settings-label" for="words-per-block-slider">Palavras por bloco: <span id="words-per-block-label">Automático</span>
+          <span class="info-icon" data-tip="Limita a quantidade de palavras em cada bloco de leitura. Quanto menos palavras, mais foco por vez. 0 = automático.">ⓘ</span>
+        </label>
+        <input id="words-per-block-slider" class="range-slider" type="range" min="0" max="50" step="1" value="0">
+      </div>
 
     <!-- Animações -->
     <div class="settings-group">
@@ -396,7 +427,6 @@
   <script src="js/ui.js"></script>
   <script src="js/navigation.js"></script>
   <script src="js/settings.js"></script>
-  <script src="js/tutorial.js"></script>
   <script src="js/app.js"></script>
 
 </body>

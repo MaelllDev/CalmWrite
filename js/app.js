@@ -41,11 +41,6 @@ window.CalmWrite = window.CalmWrite || {};
     this._checkPreviousSession();
     this._renderHomeScreen();
     
-    // Iniciar tutorial (se já não foi visto)
-    if (CalmWrite.Tutorial) {
-      CalmWrite.Tutorial.init();
-    }
-    
     console.log('🧘 CalmWrite pronto para uso');
   };
 

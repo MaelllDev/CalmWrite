@@ -80,7 +80,7 @@ window.CalmWrite = window.CalmWrite || {};
       this.container,
       {
         width: '100%',
-        height: '80',
+        height: '152',
         uri: url,
       },
       function(spotifyEmbedController) {

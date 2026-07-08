@@ -25,6 +25,8 @@ window.CalmWrite = window.CalmWrite || {};
     highContrast: false,
     fontFamily: 'atkinson',
     ambientMusic: null,
+    spotifyUrl: '',
+    wordsPerBlock: 0,
   };
 
   function SettingsManager() {
@@ -39,6 +41,10 @@ window.CalmWrite = window.CalmWrite || {};
   SettingsManager.prototype.init = function(savedSettings) {
     savedSettings = savedSettings || {};
     this.settings = Object.assign({}, DEFAULT_SETTINGS, savedSettings);
+    
+    // Store global reference so textProcessor can read wordsPerBlock
+    CalmWrite.settingsManager = this;
+    
     this._applyAll();
     this._bindEvents();
   };
@@ -188,6 +194,16 @@ window.CalmWrite = window.CalmWrite || {};
       els.animTypeSelect.addEventListener('change', function(e) { self.set('animType', e.target.value); });
     }
     
+    // Words per block
+    if (els.wordsPerBlockSlider) {
+      els.wordsPerBlockSlider.addEventListener('input', function(e) {
+        var val = parseInt(e.target.value, 10);
+        self.set('wordsPerBlock', val);
+        var label = document.getElementById('words-per-block-label');
+        if (label) label.textContent = val === 0 ? 'Automático' : val + ' palavras';
+      });
+    }
+    
     // Ambient buttons - parar Spotify se estiver tocando
     var ambientBtns = CalmWrite.UI.ambientButtons;
     if (ambientBtns && ambientBtns.length) {
@@ -226,6 +242,13 @@ window.CalmWrite = window.CalmWrite || {};
     var statusEl = document.getElementById('spotify-status');
     var container = document.getElementById('spotify-embed-container');
 
+    // Mini player controls (na tela de leitura)
+    var miniToggle = document.getElementById('mini-spotify-toggle');
+    var miniStop = document.getElementById('mini-spotify-stop');
+    var miniPrev = document.getElementById('mini-spotify-prev');
+    var miniStatus = document.getElementById('mini-spotify-status');
+    var miniPlayer = document.getElementById('spotify-mini-player');
+
     // Set container
     spotify.setContainer(container);
 
@@ -248,32 +271,102 @@ window.CalmWrite = window.CalmWrite || {};
       });
     }
 
-    // Play button
+    // Helper to toggle mini player visibility
+    function showMiniPlayer(visible) {
+      if (miniPlayer) {
+        miniPlayer.classList.toggle('mini-player--hidden', !visible);
+      }
+    }
+
+    // Helper to update mini player status
+    function updateMiniStatus(text, isPlaying) {
+      if (miniStatus) {
+        miniStatus.textContent = text;
+        miniStatus.classList.toggle('mini-player-status--playing', isPlaying);
+      }
+      if (miniToggle) {
+        var playIcon = document.getElementById('mini-spotify-play-icon');
+        var pauseIcon = document.getElementById('mini-spotify-pause-icon');
+        if (playIcon && pauseIcon) {
+          playIcon.style.display = isPlaying ? 'none' : 'block';
+          pauseIcon.style.display = isPlaying ? 'block' : 'none';
+        }
+      }
+    }
+
+    // Play button (settings panel)
+    function handlePlay() {
+      CalmWrite.audioManager.stopAmbient();
+      spotify.play();
+      self.set('ambientMusic', 'spotify');
+      self._updateSpotifyStatus('playing');
+      showMiniPlayer(true);
+      updateMiniStatus('▶ Tocando Spotify', true);
+    }
+
     if (playBtn) {
-      playBtn.addEventListener('click', function() {
-        // Parar audio ambiente
-        CalmWrite.audioManager.stopAmbient();
-        // Tocar Spotify
-        spotify.play();
-        self.set('ambientMusic', 'spotify');
-        self._updateSpotifyStatus('playing');
-      });
+      playBtn.addEventListener('click', handlePlay);
     }
 
-    // Pause button
+    // Pause button (settings panel)
+    function handlePause() {
+      spotify.pauseOnly();
+      self._updateSpotifyStatus('paused');
+      updateMiniStatus('⏸ Pausado', false);
+    }
+
     if (pauseBtn) {
-      pauseBtn.addEventListener('click', function() {
-        spotify.pauseOnly();
-        self._updateSpotifyStatus('paused');
+      pauseBtn.addEventListener('click', handlePause);
+    }
+
+    // Stop button (settings panel)
+    function handleStop() {
+      spotify.stop();
+      self.set('ambientMusic', null);
+      self._updateSpotifyStatus('stopped');
+      showMiniPlayer(false);
+      updateMiniStatus('⏹ Parado', false);
+    }
+
+    if (stopBtn) {
+      stopBtn.addEventListener('click', handleStop);
+    }
+
+    // Mini player: toggle play/pause
+    if (miniToggle) {
+      miniToggle.addEventListener('click', function() {
+        if (spotify.isPlaying) {
+          spotify.pauseOnly();
+          updateMiniStatus('⏸ Pausado', false);
+          self._updateSpotifyStatus('paused');
+        } else {
+          CalmWrite.audioManager.stopAmbient();
+          spotify.play();
+          self.set('ambientMusic', 'spotify');
+          updateMiniStatus('▶ Tocando Spotify', true);
+          self._updateSpotifyStatus('playing');
+        }
       });
     }
 
-    // Stop button
-    if (stopBtn) {
-      stopBtn.addEventListener('click', function() {
+    // Mini player: stop
+    if (miniStop) {
+      miniStop.addEventListener('click', function() {
         spotify.stop();
         self.set('ambientMusic', null);
+        showMiniPlayer(false);
+        updateMiniStatus('⏹ Parado', false);
         self._updateSpotifyStatus('stopped');
+      });
+    }
+
+    // Mini player: previous (reload current track - just toggle)
+    if (miniPrev) {
+      miniPrev.addEventListener('click', function() {
+        if (spotify.controller && spotify.currentUrl) {
+          spotify.controller.loadEntity(spotify.currentUrl);
+          setTimeout(function() { spotify.play(); }, 500);
+        }
       });
     }
 
@@ -281,13 +374,17 @@ window.CalmWrite = window.CalmWrite || {};
     spotify.on('playbackStarted', function() {
       CalmWrite.audioManager.stopAmbient();
       self._updateSpotifyStatus('playing');
+      showMiniPlayer(true);
+      updateMiniStatus('▶ Tocando Spotify', true);
     });
 
     spotify.on('playbackUpdate', function(data) {
       if (data.isPaused) {
         self._updateSpotifyStatus('paused');
+        updateMiniStatus('⏸ Pausado', false);
       } else {
         self._updateSpotifyStatus('playing');
+        updateMiniStatus('▶ Tocando Spotify', true);
       }
     });
 
@@ -443,6 +540,13 @@ window.CalmWrite = window.CalmWrite || {};
     if (els.fontSelect) els.fontSelect.value = s.fontFamily;
     if (els.soundSelect) els.soundSelect.value = s.soundType;
     if (els.animTypeSelect) els.animTypeSelect.value = s.animType;
+    
+    // Words per block
+    if (els.wordsPerBlockSlider) {
+      els.wordsPerBlockSlider.value = s.wordsPerBlock;
+      var wpl = document.getElementById('words-per-block-label');
+      if (wpl) wpl.textContent = s.wordsPerBlock === 0 ? 'Automático' : s.wordsPerBlock + ' palavras';
+    }
     
     var ambientBtns = CalmWrite.UI.ambientButtons;
     if (ambientBtns && ambientBtns.length) {

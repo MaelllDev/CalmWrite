@@ -1288,6 +1288,113 @@ body {
 }
 
 /* ============================================================
+   MINI PLAYER (Spotify na tela de leitura)
+   ============================================================ */
+.mini-player {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-sm) var(--space-lg);
+  background: var(--bg-glass);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border-color);
+  z-index: 3;
+  gap: var(--space-md);
+  transition: all var(--anim-normal) var(--anim-ease);
+}
+
+.mini-player--hidden {
+  display: none;
+}
+
+.mini-player-info {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  font-size: var(--font-size-sm);
+  color: var(--text-secondary);
+  min-width: 0;
+  flex: 1;
+}
+
+.mini-player-icon {
+  font-size: 16px;
+  line-height: 1;
+}
+
+.mini-player-status {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: var(--text-tertiary);
+  font-size: var(--font-size-xs);
+}
+
+.mini-player-status--playing {
+  color: var(--success);
+}
+
+.mini-player-controls {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.mini-player-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border: none;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all var(--anim-fast) var(--anim-ease);
+}
+
+.mini-player-btn:hover {
+  background: var(--bg-hover);
+  color: var(--text-primary);
+}
+
+.mini-player-btn:active {
+  transform: scale(0.9);
+}
+
+.mini-player-btn--play {
+  width: 36px;
+  height: 36px;
+}
+
+.mini-player-btn svg {
+  display: block;
+}
+
+.mini-player-btn--playing .mini-player-btn--play svg {
+  color: var(--success);
+}
+
+@media (max-width: 480px) {
+  .mini-player {
+    padding: var(--space-xs) var(--space-md);
+  }
+  .mini-player-status {
+    font-size: 11px;
+  }
+  .mini-player-btn {
+    width: 28px;
+    height: 28px;
+  }
+  .mini-player-btn--play {
+    width: 32px;
+    height: 32px;
+  }
+}
+
+/* ============================================================
    SPOTIFY
    ============================================================ */
 .spotify-container {
@@ -1295,7 +1402,7 @@ body {
   border-radius: var(--radius-sm);
   overflow: hidden;
   background: var(--bg-tertiary);
-  min-height: 80px;
+  min-height: 152px;
   transition: all var(--anim-normal) var(--anim-ease);
 }
 

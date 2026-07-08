@@ -48,6 +48,7 @@ window.CalmWrite = window.CalmWrite || {};
         fontSizeSlider: document.getElementById('font-size-slider'),
         lineHeightSlider: document.getElementById('line-height-slider'),
         animSpeedSlider: document.getElementById('anim-speed-slider'),
+        wordsPerBlockSlider: document.getElementById('words-per-block-slider'),
         musicVolumeSlider: document.getElementById('music-volume-slider'),
         effectsVolumeSlider: document.getElementById('effects-volume-slider'),
         fontSelect: document.getElementById('font-select'),
