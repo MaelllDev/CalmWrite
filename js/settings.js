@@ -118,6 +118,8 @@ window.CalmWrite = window.CalmWrite || {};
     if (els.themeDark) els.themeDark.addEventListener('click', function() { self.set('theme', 'dark'); });
     if (els.themeLight) els.themeLight.addEventListener('click', function() { self.set('theme', 'light'); });
     if (els.themeSepia) els.themeSepia.addEventListener('click', function() { self.set('theme', 'sepia'); });
+    if (els.themeNavy) els.themeNavy.addEventListener('click', function() { self.set('theme', 'navy'); });
+    if (els.themeSky) els.themeSky.addEventListener('click', function() { self.set('theme', 'sky'); });
     
     if (els.toggleFullscreen) {
       els.toggleFullscreen.addEventListener('change', this._handleFullscreen);
@@ -368,11 +370,11 @@ window.CalmWrite = window.CalmWrite || {};
 
   SettingsManager.prototype._updateThemeButtons = function(activeTheme) {
     var els = CalmWrite.UI.elements;
-    var buttons = [els.themeDark, els.themeLight, els.themeSepia];
+    var buttons = [els.themeDark, els.themeLight, els.themeSepia, els.themeNavy, els.themeSky];
     for (var i = 0; i < buttons.length; i++) {
       if (buttons[i]) buttons[i].classList.remove('theme-btn--active');
     }
-    var map = { dark: els.themeDark, light: els.themeLight, sepia: els.themeSepia };
+    var map = { dark: els.themeDark, light: els.themeLight, sepia: els.themeSepia, navy: els.themeNavy, sky: els.themeSky };
     var active = map[activeTheme];
     if (active) active.classList.add('theme-btn--active');
   };

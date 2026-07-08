@@ -40,6 +40,8 @@ window.CalmWrite = window.CalmWrite || {};
         themeDark: document.getElementById('theme-dark'),
         themeLight: document.getElementById('theme-light'),
         themeSepia: document.getElementById('theme-sepia'),
+        themeNavy: document.getElementById('theme-navy'),
+        themeSky: document.getElementById('theme-sky'),
         toggleFullscreen: document.getElementById('toggle-fullscreen'),
         toggleHideCursor: document.getElementById('toggle-hide-cursor'),
         toggleHighContrast: document.getElementById('toggle-high-contrast'),
