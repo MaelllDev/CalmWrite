@@ -135,7 +135,7 @@ window.CalmWrite = window.CalmWrite || {};
       var text = document.getElementById('progress-text');
       
       if (fill) {
-        var percent = total > 0 ? (current / total) * 100 : 0;
+        var percent = total > 0 ? ((current + 1) / total) * 100 : 0;
         fill.style.width = Math.min(percent, 100) + '%';
       }
       if (text) {
