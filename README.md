@@ -30,6 +30,7 @@ Ideal para:
 - 📝 Transcrição de textos longos
 - 🧘 Leitura sem distrações
 - 🎧 Estudar com música ambiente ou Spotify
+- ✏️ Escrever e revisar textos no próprio navegador
 
 ---
 
@@ -44,6 +45,7 @@ Ideal para:
    - `←` `Backspace` — bloco anterior
    - `Esc` — sair da leitura
    - Clique nas laterais da tela para navegar
+   - Botão **"Sair"** na barra de progresso para voltar ao início
 
 ---
 
@@ -55,13 +57,18 @@ Ideal para:
 - **Nunca** corta palavras no meio
 - Modo de **palavras por bloco** (limite manual, atualiza em tempo real)
 
+### 🎮 Ferramentas de edição (na tela de leitura)
+- **📝 Editar texto** — abre o modal com o texto completo para editar no meio da leitura
+- **✏️ Editar bloco** — edita apenas o parágrafo visível (contentEditable com um clique)
+- **💾 Baixar TXT** — baixa o texto completo como arquivo `.txt` com um clique
+
 ### 🎨 Personalização
-- **3 temas:** Escuro, Claro e Sépia
+- **5 temas:** Escuro, Claro, Sépia, Azul Escuro (Navy) e Azul Claro (Sky)
 - **4 fontes:** Atkinson Hyperlegible, Inter, Nunito e IBM Plex Sans
 - Ajuste de **tamanho da fonte** e **espaçamento entre linhas**
 - **4 animações** de transição: Fade, Slide, Scale e Blur
 - Velocidade das animações ajustável
-- Opção de **alto contraste** e **ocultar cursor**
+- Opção de **alto contraste**, **ocultar cursor** e **tela cheia**
 
 ### 🔊 Som e música
 - **Sons de navegação:** Papel, Click e Máquina de escrever
@@ -74,6 +81,7 @@ Ideal para:
 - Cole o link de qualquer playlist do Spotify
 - Player compacto flutuando no canto inferior esquerdo
 - Controles nativos (play/pause/pular/volume)
+- Opção de **mostrar ou ocultar** o player nas configurações
 - Volumes independentes da música ambiente
 
 ### 📄 Importação de PDF
@@ -86,15 +94,16 @@ Ideal para:
 - Ao reabrir, pergunta se deseja **continuar de onde parou**
 - Sessões expiram após 24h
 
+### 💝 Apoiar o projeto
+- Link para [PixGG](https://pixgg.com/maelldev) na tela inicial
+- Contribuições voluntárias ajudam a manter o projeto ativo
+
 ### ♿ Acessibilidade
 - Navegação completa por teclado
 - Suporte a alto contraste
 - Fontes de alta legibilidade (Atkinson Hyperlegible)
 - `aria-live`, `aria-label` e semântica HTML
-
-### 🎉 Parabéns ao final
-- Modal comemorativo ao terminar a leitura
-- Botão para voltar ao início
+- Edição de texto inline durante a leitura
 
 ---
 
@@ -104,6 +113,7 @@ Ideal para:
 CalmWrite/
 ├── index.html              # Página principal
 ├── README.md               # Este arquivo
+├── LICENSE.md              # Licença MIT
 ├── assets/
 │   ├── audio/              # (reservado para áudios futuros)
 │   ├── fonts/              # (reservado para fontes locais)
@@ -156,6 +166,11 @@ Em `js/audio.js`, crie um método `_createSeuSom()` seguindo o padrão dos exist
 3. Adicione a opção no `<select id="font-select">` em `index.html`
 4. Adicione o mapeamento no método `_applyFont()` em `js/settings.js`
 
+### Adicionar novo tema
+1. Crie o bloco CSS `[data-theme="seu-tema"]` com as variáveis de cor
+2. Adicione o botão no `.theme-selector` em `index.html`
+3. Adicione o mapeamento no método `_applyTheme()` em `js/settings.js`
+
 ---
 
 ## 📄 Licença
@@ -186,11 +201,12 @@ Criado por [**MaelllDev**](https://github.com/MaelllDev)
 
 - 🌐 Site: [CalmWrite](https://maellldev.github.io/CalmWrite/)
 - 🐙 GitHub: [@MaelllDev](https://github.com/MaelllDev)
+- 💝 Apoiar: [PixGG](https://pixgg.com/maelldev)
 
 ### 💡 Agradecimentos
 
 - **@amb3rkai** — pela sugestão de importação de PDF e limite de letras, que elevou o CalmWrite a outro nível 🚀
-- **@harem4** — pela sugestão dos temas azuis Navy e Sky e varios bug reports 🌊✨
+- **@harem4** — pela sugestão dos temas azuis **Navy** e **Sky** e vários bug reports 🌊✨
 
 ---
 
