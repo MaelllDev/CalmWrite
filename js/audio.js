@@ -164,13 +164,9 @@ window.CalmWrite = window.CalmWrite || {};
     
     // Parar Spotify se estiver tocando
     if (window.CalmWrite && CalmWrite.spotifyManager) {
-      CalmWrite.spotifyManager.pauseOnly();
-      // Atualizar status na UI
-      var statusEl = document.getElementById('spotify-status');
-      if (statusEl) {
-        statusEl.classList.remove('spotify-status--playing');
-        statusEl.textContent = '⏸ Spotify pausado';
-      }
+      CalmWrite.spotifyManager.clear();
+      var miniPlayer = document.getElementById('spotify-mini-player');
+      if (miniPlayer) miniPlayer.classList.add('mini-player--hidden');
     }
     
     this.activeAmbient = type;

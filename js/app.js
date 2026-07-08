@@ -45,10 +45,7 @@ window.CalmWrite = window.CalmWrite || {};
   };
 
   CalmWriteApp.prototype._setupSpotify = function() {
-    // Inicializar Spotify (carrega o script da API)
-    if (CalmWrite.spotifyManager) {
-      CalmWrite.spotifyManager.init();
-    }
+    // Spotify é gerenciado via iframe direto, não precisa de init
   };
 
   CalmWriteApp.prototype._setupAudioInit = function() {
