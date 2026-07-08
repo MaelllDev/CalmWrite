@@ -189,8 +189,8 @@ Criado por [**MaelllDev**](https://github.com/MaelllDev)
 
 ### 💡 Agradecimentos
 
-- **@amb3rkai** — pela sugestão de importação de PDF, que elevou o CalmWrite a outro nível 🚀
-- **@harem4** — pela sugestão dos temas azuis Navy e Sky 🌊✨
+- **@amb3rkai** — pela sugestão de importação de PDF e limite de letras, que elevou o CalmWrite a outro nível 🚀
+- **@harem4** — pela sugestão dos temas azuis Navy e Sky e varios bug reports 🌊✨
 
 ---
 
