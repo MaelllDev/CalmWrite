@@ -151,7 +151,8 @@ window.CalmWrite = window.CalmWrite || {};
   CalmWriteApp.prototype._renderHomeScreen = function() {
     var logoContainer = document.getElementById('home-logo-container');
     if (logoContainer) {
-      logoContainer.innerHTML = CalmWrite.UI.createLogoSVG(80);
+      // Usar a logo real do assets
+      logoContainer.innerHTML = '<img src="assets/icons/logo1024.svg" alt="CalmWrite" width="80" height="80" style="width:80px;height:80px">';
     }
   };
 

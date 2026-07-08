@@ -69,7 +69,7 @@ window.CalmWrite = window.CalmWrite || {};
     // Atualizar player flutuante
     if (this._container) {
       if (this.currentUrl) {
-        this._createIframe(this._container, '152');
+        this._createIframe(this._container, '80');
       } else {
         this._container.innerHTML = '';
       }
