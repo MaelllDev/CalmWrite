@@ -505,7 +505,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 100;
+  z-index: 300;
   opacity: 0;
   pointer-events: none;
   transition: opacity var(--anim-normal) var(--anim-ease);
@@ -1462,55 +1462,6 @@ body {
   color: var(--text-tertiary);
   font-style: italic;
   line-height: 1.4;
-}
-
-/* ============================================================
-   CONGRATULATIONS MODAL
-   ============================================================ */
-.congrats-modal-content {
-  max-width: 420px;
-  text-align: center;
-  padding: var(--space-3xl) var(--space-2xl);
-  align-items: center;
-}
-
-.congrats-emoji {
-  font-size: 4rem;
-  line-height: 1;
-  margin-bottom: var(--space-md);
-  animation: congrats-bounce 0.6s var(--anim-spring);
-}
-
-@keyframes congrats-bounce {
-  0% { transform: scale(0); }
-  50% { transform: scale(1.2); }
-  100% { transform: scale(1); }
-}
-
-.congrats-title {
-  font-family: var(--font-heading);
-  font-size: var(--font-size-2xl);
-  font-weight: 600;
-  color: var(--text-primary);
-  margin-bottom: var(--space-sm);
-}
-
-.congrats-text {
-  font-size: var(--font-size-base);
-  color: var(--text-secondary);
-  line-height: 1.6;
-  margin-bottom: var(--space-lg);
-}
-
-.congrats-stats {
-  font-size: var(--font-size-xs);
-  color: var(--text-tertiary);
-  font-family: var(--font-mono);
-  margin-bottom: var(--space-lg);
-}
-
-.congrats-btn {
-  min-width: 200px;
 }
 
 /* ============================================================

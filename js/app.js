@@ -160,14 +160,6 @@ window.CalmWrite = window.CalmWrite || {};
       });
     }
 
-    // Botão voltar do parabéns
-    var congratsBtn = document.getElementById('btn-congrats-home');
-    if (congratsBtn) {
-      congratsBtn.addEventListener('click', function() {
-        self._closeCongratulations();
-      });
-    }
-
     document.addEventListener('keydown', function(e) {
       if (e.key === 'F11') {
         e.preventDefault();
@@ -367,23 +359,11 @@ window.CalmWrite = window.CalmWrite || {};
 
   CalmWriteApp.prototype._onReadingFinished = function() {
     this.isReading = false;
-    this.navigation.destroy();
+    if (this.navigation) this.navigation.destroy();
     CalmWrite.Storage.clearSession();
     CalmWrite.audioManager.stopAmbient();
     
-    // Mostrar modal de parabéns
-    CalmWrite.UI.showCongratulations();
-    
-    if (this.settings) {
-      this.settings.syncUI();
-    }
-  };
-
-  /**
-   * Fecha o modal de parabéns e volta pra home
-   */
-  CalmWriteApp.prototype._closeCongratulations = function() {
-    CalmWrite.UI.closeCongratulations();
+    // Voltar pra home
     CalmWrite.UI.switchScreen(CalmWrite.UI.elements.readingScreen, CalmWrite.UI.elements.homeScreen);
     
     if (CalmWrite.UI.elements.textInput) {

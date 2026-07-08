@@ -194,22 +194,6 @@ window.CalmWrite = window.CalmWrite || {};
       if (backdrop) backdrop.classList.remove('settings-panel-backdrop--visible');
     },
 
-    /** Mostra modal de parabéns ao final da leitura */
-    showCongratulations: function() {
-      var overlay = document.getElementById('congrats-overlay');
-      if (overlay) {
-        overlay.classList.add('modal-overlay--visible');
-      }
-    },
-
-    /** Fecha modal de parabéns */
-    closeCongratulations: function() {
-      var overlay = document.getElementById('congrats-overlay');
-      if (overlay) {
-        overlay.classList.remove('modal-overlay--visible');
-      }
-    },
-
     showReadingBlock: function(text, animType) {
       var block = document.getElementById('reading-block');
       if (!block) return;
