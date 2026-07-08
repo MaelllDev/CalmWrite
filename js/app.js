@@ -160,6 +160,30 @@ window.CalmWrite = window.CalmWrite || {};
       });
     }
 
+    // Botão editar texto completo
+    var btnEditFull = document.getElementById('btn-edit-full');
+    if (btnEditFull) {
+      btnEditFull.addEventListener('click', function() {
+        self._openFullTextEditor();
+      });
+    }
+
+    // Botão editar bloco/parágrafo atual
+    var btnEditBlock = document.getElementById('btn-edit-block');
+    if (btnEditBlock) {
+      btnEditBlock.addEventListener('click', function() {
+        self._editCurrentParagraph();
+      });
+    }
+
+    // Botão baixar TXT
+    var btnDownloadTxt = document.getElementById('btn-download-txt');
+    if (btnDownloadTxt) {
+      btnDownloadTxt.addEventListener('click', function() {
+        self._downloadTXT();
+      });
+    }
+
     document.addEventListener('keydown', function(e) {
       if (e.key === 'F11') {
         e.preventDefault();
@@ -265,6 +289,9 @@ window.CalmWrite = window.CalmWrite || {};
   };
 
   CalmWriteApp.prototype._startReading = function() {
+    // Restaurar UI do modal ao estado padrão
+    this._resetTextModalUI();
+
     var input = CalmWrite.UI.elements.textInput;
     if (!input) return;
     
@@ -355,6 +382,112 @@ window.CalmWrite = window.CalmWrite || {};
       currentIndex,
       this.originalText
     );
+  };
+
+  CalmWriteApp.prototype._resetTextModalUI = function() {
+    var title = document.getElementById('modal-title');
+    var processBtn = document.getElementById('btn-process-text');
+    var cancelBtn = document.getElementById('btn-cancel-text');
+    if (title) title.textContent = 'Cole, escreva ou importe seu texto';
+    if (processBtn) processBtn.textContent = 'Começar';
+    if (cancelBtn) cancelBtn.textContent = 'Cancelar';
+  };
+
+  CalmWriteApp.prototype._openFullTextEditor = function() {
+    if (!this.originalText) return;
+    
+    var overlay = document.getElementById('text-modal-overlay');
+    var input = document.getElementById('text-input');
+    var title = document.getElementById('modal-title');
+    var processBtn = document.getElementById('btn-process-text');
+    var cancelBtn = document.getElementById('btn-cancel-text');
+    
+    if (!overlay || !input) return;
+    
+    // Mudar título e botões
+    if (title) title.textContent = 'Editando texto completo';
+    if (processBtn) processBtn.textContent = 'Atualizar';
+    if (cancelBtn) cancelBtn.textContent = 'Cancelar';
+    
+    // Preencher com o texto atual e abrir
+    input.value = this.originalText;
+    overlay.classList.add('modal-overlay--visible');
+    setTimeout(function() { input.focus(); }, 100);
+  };
+
+  CalmWriteApp.prototype._editCurrentParagraph = function() {
+    if (!this.navigation || !this.isReading) return;
+    
+    var block = document.getElementById('reading-block');
+    if (!block) return;
+    
+    // Se já está editando, salvar
+    if (block.isContentEditable) {
+      this._saveEditedParagraph();
+      return;
+    }
+    
+    var btnEditBlock = document.getElementById('btn-edit-block');
+    if (btnEditBlock) btnEditBlock.classList.add('reading-toolbar-btn--active');
+    if (btnEditBlock) btnEditBlock.querySelector('span').textContent = 'Salvar';
+    
+    // Muda o bloco pra editável
+    block.contentEditable = true;
+    block.focus();
+    
+    // Placeholder visual
+    block.style.outline = '2px solid var(--accent)';
+    block.style.borderRadius = '4px';
+    block.style.padding = '4px 8px';
+  };
+
+  CalmWriteApp.prototype._saveEditedParagraph = function() {
+    var block = document.getElementById('reading-block');
+    var btnEditBlock = document.getElementById('btn-edit-block');
+    
+    if (!block) return;
+    
+    var editedText = block.textContent.trim();
+    if (!editedText) return;
+    
+    // Desabilitar edição
+    block.contentEditable = false;
+    block.style.outline = '';
+    block.style.borderRadius = '';
+    block.style.padding = '';
+    
+    if (btnEditBlock) btnEditBlock.classList.remove('reading-toolbar-btn--active');
+    if (btnEditBlock) btnEditBlock.querySelector('span').textContent = 'Editar bloco';
+    
+    // Atualizar o bloco no array de blocos
+    var idx = this.navigation.currentIndex;
+    if (this.navigation.blocks && idx >= 0 && idx < this.navigation.blocks.length) {
+      this.navigation.blocks[idx] = editedText;
+    }
+    
+    // Reconstruir originalText a partir dos blocos
+    this.originalText = this.navigation.blocks.join('\n\n');
+    
+    CalmWrite.UI.showToast('Parágrafo atualizado');
+  };
+
+  CalmWriteApp.prototype._downloadTXT = function() {
+    if (!this.originalText) {
+      CalmWrite.UI.showToast('Nenhum texto para baixar');
+      return;
+    }
+    
+    var blob = new Blob([this.originalText], { type: 'text/plain;charset=utf-8' });
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement('a');
+    a.href = url;
+    a.download = 'calmwrite-texto.txt';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    
+    CalmWrite.UI.showToast('Texto baixado como .txt');
   };
 
   CalmWriteApp.prototype._onReadingFinished = function() {

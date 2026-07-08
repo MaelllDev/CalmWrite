@@ -164,6 +164,13 @@ window.CalmWrite = window.CalmWrite || {};
       if (overlay) {
         overlay.classList.remove('modal-overlay--visible');
       }
+      // Restaurar título e botões ao estado padrão
+      var title = document.getElementById('modal-title');
+      var processBtn = document.getElementById('btn-process-text');
+      var cancelBtn = document.getElementById('btn-cancel-text');
+      if (title) title.textContent = 'Cole, escreva ou importe seu texto';
+      if (processBtn) processBtn.textContent = 'Começar';
+      if (cancelBtn) cancelBtn.textContent = 'Cancelar';
     },
 
     openResumeModal: function() {
