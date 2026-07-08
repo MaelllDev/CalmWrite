@@ -234,7 +234,7 @@ window.CalmWrite = window.CalmWrite || {};
     var spotify = CalmWrite.spotifyManager;
     if (!spotify) return;
 
-    // URL input
+    // Elementos DOM
     var urlInput = document.getElementById('spotify-url');
     var playBtn = document.getElementById('btn-spotify-play');
     var pauseBtn = document.getElementById('btn-spotify-pause');
@@ -242,23 +242,28 @@ window.CalmWrite = window.CalmWrite || {};
     var statusEl = document.getElementById('spotify-status');
     var container = document.getElementById('spotify-embed-container');
 
-    // Mini player controls (na tela de leitura)
+    // Mini player
     var miniToggle = document.getElementById('mini-spotify-toggle');
     var miniStop = document.getElementById('mini-spotify-stop');
     var miniPrev = document.getElementById('mini-spotify-prev');
     var miniStatus = document.getElementById('mini-spotify-status');
     var miniPlayer = document.getElementById('spotify-mini-player');
+    var miniContainer = document.getElementById('spotify-mini-embed');
 
-    // Set container
+    // Set containers no SpotifyManager
     spotify.setContainer(container);
+    spotify.setMiniContainer(miniContainer);
 
-    // Listen for URL changes (on Enter or blur)
+    // ============================================
+    // URL input events
+    // ============================================
     if (urlInput) {
       var loadUrl = function() {
         var url = urlInput.value.trim();
         if (url) {
-          spotify.loadUrl(url);
+          spotify.currentUrl = url;
           self.set('spotifyUrl', url);
+          CalmWrite.UI.showToast('URL salva! Clique em Tocar para ouvir');
         }
       };
       urlInput.addEventListener('change', loadUrl);
@@ -271,124 +276,146 @@ window.CalmWrite = window.CalmWrite || {};
       });
     }
 
-    // Helper to toggle mini player visibility
+    // ============================================
+    // Helpers
+    // ============================================
     function showMiniPlayer(visible) {
       if (miniPlayer) {
         miniPlayer.classList.toggle('mini-player--hidden', !visible);
       }
     }
 
-    // Helper to update mini player status
-    function updateMiniStatus(text, isPlaying) {
+    function updateMiniStatus(text, playing) {
       if (miniStatus) {
         miniStatus.textContent = text;
-        miniStatus.classList.toggle('mini-player-status--playing', isPlaying);
+        miniStatus.classList.toggle('mini-player-status--playing', playing);
       }
       if (miniToggle) {
         var playIcon = document.getElementById('mini-spotify-play-icon');
         var pauseIcon = document.getElementById('mini-spotify-pause-icon');
         if (playIcon && pauseIcon) {
-          playIcon.style.display = isPlaying ? 'none' : 'block';
-          pauseIcon.style.display = isPlaying ? 'block' : 'none';
+          playIcon.style.display = playing ? 'none' : 'block';
+          pauseIcon.style.display = playing ? 'block' : 'none';
         }
       }
     }
 
-    // Play button (settings panel)
-    function handlePlay() {
+    function updateAllStatus(state) {
+      self._updateSpotifyStatus(state);
+      switch (state) {
+        case 'playing':
+          self.set('ambientMusic', 'spotify');
+          showMiniPlayer(true);
+          updateMiniStatus('▶ Tocando Spotify', true);
+          break;
+        case 'paused':
+          updateMiniStatus('⏸ Pausado', false);
+          break;
+        default:
+          self.set('ambientMusic', null);
+          showMiniPlayer(false);
+          updateMiniStatus('⏹ Parado', false);
+      }
+    }
+
+    // ============================================
+    // Spotify events
+    // ============================================
+    spotify.on('playbackStarted', function() {
       CalmWrite.audioManager.stopAmbient();
-      spotify.play();
-      self.set('ambientMusic', 'spotify');
-      self._updateSpotifyStatus('playing');
-      showMiniPlayer(true);
-      updateMiniStatus('▶ Tocando Spotify', true);
-    }
+      updateAllStatus('playing');
+    });
 
+    spotify.on('paused', function() {
+      updateAllStatus('paused');
+    });
+
+    spotify.on('stopped', function() {
+      updateAllStatus('stopped');
+    });
+
+    // ============================================
+    // Settings panel buttons
+    // ============================================
     if (playBtn) {
-      playBtn.addEventListener('click', handlePlay);
-    }
-
-    // Pause button (settings panel)
-    function handlePause() {
-      spotify.pauseOnly();
-      self._updateSpotifyStatus('paused');
-      updateMiniStatus('⏸ Pausado', false);
+      playBtn.addEventListener('click', function() {
+        // Garantir que currentUrl esteja atualizado com o input
+        var url = urlInput ? urlInput.value.trim() : '';
+        if (!url) {
+          CalmWrite.UI.showToast('Cole uma URL do Spotify primeiro');
+          return;
+        }
+        if (url !== spotify.currentUrl) {
+          spotify.currentUrl = url;
+          self.set('spotifyUrl', url);
+        }
+        CalmWrite.audioManager.stopAmbient();
+        spotify.play();
+        updateAllStatus('playing');
+      });
     }
 
     if (pauseBtn) {
-      pauseBtn.addEventListener('click', handlePause);
-    }
-
-    // Stop button (settings panel)
-    function handleStop() {
-      spotify.stop();
-      self.set('ambientMusic', null);
-      self._updateSpotifyStatus('stopped');
-      showMiniPlayer(false);
-      updateMiniStatus('⏹ Parado', false);
+      pauseBtn.addEventListener('click', function() {
+        spotify.pauseOnly();
+        updateAllStatus('paused');
+      });
     }
 
     if (stopBtn) {
-      stopBtn.addEventListener('click', handleStop);
+      stopBtn.addEventListener('click', function() {
+        spotify.stop();
+        updateAllStatus('stopped');
+      });
     }
 
-    // Mini player: toggle play/pause
+    // ============================================
+    // Mini player buttons
+    // ============================================
     if (miniToggle) {
       miniToggle.addEventListener('click', function() {
         if (spotify.isPlaying) {
-          spotify.pauseOnly();
-          updateMiniStatus('⏸ Pausado', false);
-          self._updateSpotifyStatus('paused');
+          spotify.pause();
+          updateAllStatus('paused');
         } else {
+          // Se não tem URL, tentar pegar do input
+          if (!spotify.currentUrl && urlInput) {
+            var url = urlInput.value.trim();
+            if (url) {
+              spotify.currentUrl = url;
+              self.set('spotifyUrl', url);
+            }
+          }
+          if (!spotify.currentUrl) {
+            CalmWrite.UI.showToast('Cole uma URL do Spotify nas Configurações');
+            return;
+          }
           CalmWrite.audioManager.stopAmbient();
           spotify.play();
-          self.set('ambientMusic', 'spotify');
-          updateMiniStatus('▶ Tocando Spotify', true);
-          self._updateSpotifyStatus('playing');
+          updateAllStatus('playing');
         }
       });
     }
 
-    // Mini player: stop
     if (miniStop) {
       miniStop.addEventListener('click', function() {
         spotify.stop();
-        self.set('ambientMusic', null);
-        showMiniPlayer(false);
-        updateMiniStatus('⏹ Parado', false);
-        self._updateSpotifyStatus('stopped');
+        updateAllStatus('stopped');
       });
     }
 
-    // Mini player: previous (reload current track - just toggle)
     if (miniPrev) {
       miniPrev.addEventListener('click', function() {
-        if (spotify.controller && spotify.currentUrl) {
-          spotify.controller.loadEntity(spotify.currentUrl);
-          setTimeout(function() { spotify.play(); }, 500);
+        // Recarregar a mesma playlist
+        if (spotify.currentUrl) {
+          spotify.play();
         }
       });
     }
 
-    // Listen to Spotify events
-    spotify.on('playbackStarted', function() {
-      CalmWrite.audioManager.stopAmbient();
-      self._updateSpotifyStatus('playing');
-      showMiniPlayer(true);
-      updateMiniStatus('▶ Tocando Spotify', true);
-    });
-
-    spotify.on('playbackUpdate', function(data) {
-      if (data.isPaused) {
-        self._updateSpotifyStatus('paused');
-        updateMiniStatus('⏸ Pausado', false);
-      } else {
-        self._updateSpotifyStatus('playing');
-        updateMiniStatus('▶ Tocando Spotify', true);
-      }
-    });
-
+    // ============================================
     // Restore URL from settings
+    // ============================================
     var savedUrl = self.get('spotifyUrl');
     if (savedUrl && urlInput) {
       urlInput.value = savedUrl;
