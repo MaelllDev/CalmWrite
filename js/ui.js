@@ -47,6 +47,7 @@ window.CalmWrite = window.CalmWrite || {};
         toggleHighContrast: document.getElementById('toggle-high-contrast'),
         toggleAnimations: document.getElementById('toggle-animations'),
         toggleSounds: document.getElementById('toggle-sounds'),
+        toggleSpotifyVisible: document.getElementById('toggle-spotify-visible'),
         fontSizeSlider: document.getElementById('font-size-slider'),
         lineHeightSlider: document.getElementById('line-height-slider'),
         animSpeedSlider: document.getElementById('anim-speed-slider'),

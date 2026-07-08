@@ -26,6 +26,7 @@ window.CalmWrite = window.CalmWrite || {};
     fontFamily: 'atkinson',
     ambientMusic: null,
     spotifyUrl: '',
+    spotifyVisible: true,
     wordsPerBlock: 0,
   };
 
@@ -228,6 +229,12 @@ window.CalmWrite = window.CalmWrite || {};
     }
     
     // Spotify bindings
+    if (els.toggleSpotifyVisible) {
+      els.toggleSpotifyVisible.addEventListener('change', function(e) {
+        self.set('spotifyVisible', e.target.checked);
+      });
+    }
+    
     self._bindSpotify();
     
     document.addEventListener('keydown', this._handleEscape);
@@ -353,7 +360,20 @@ window.CalmWrite = window.CalmWrite || {};
       case 'ambientMusic':
       case 'soundType':
       case 'animType':
-        break;
+      case 'spotifyVisible':
+        this._applySpotifyVisibility(value);
+    }
+  };
+
+  SettingsManager.prototype._applySpotifyVisibility = function(visible) {
+    var miniPlayer = document.getElementById('spotify-mini-player');
+    if (!miniPlayer) return;
+    
+    var spotify = CalmWrite.spotifyManager;
+    if (!visible) {
+      miniPlayer.classList.add('mini-player--hidden');
+    } else if (this.settings.spotifyUrl) {
+      miniPlayer.classList.remove('mini-player--hidden');
     }
   };
 
@@ -427,6 +447,8 @@ window.CalmWrite = window.CalmWrite || {};
       var wpl = document.getElementById('words-per-block-label');
       if (wpl) wpl.textContent = s.wordsPerBlock === 0 ? 'Automático' : s.wordsPerBlock + ' palavras';
     }
+    
+    if (els.toggleSpotifyVisible) els.toggleSpotifyVisible.checked = s.spotifyVisible;
     
     var ambientBtns = CalmWrite.UI.ambientButtons;
     if (ambientBtns && ambientBtns.length) {
