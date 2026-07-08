@@ -716,6 +716,33 @@ body {
   font-family: var(--font-mono);
 }
 
+.btn-exit-reading {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 10px;
+  background: transparent;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  color: var(--text-tertiary);
+  font-family: var(--font-body);
+  font-size: var(--font-size-xs);
+  cursor: pointer;
+  transition: all var(--anim-fast) var(--anim-ease);
+  flex-shrink: 0;
+  margin-left: var(--space-sm);
+}
+
+.btn-exit-reading:hover {
+  background: var(--bg-hover);
+  color: var(--error);
+  border-color: var(--error);
+}
+
+.btn-exit-reading svg {
+  flex-shrink: 0;
+}
+
 /* ============================================================
    SETTINGS PANEL
    ============================================================ */

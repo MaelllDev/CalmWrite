@@ -150,6 +150,16 @@ window.CalmWrite = window.CalmWrite || {};
       els.btnResumeNo.addEventListener('click', function() { self._resumeSession(false); });
     }
 
+    // Botão sair da leitura
+    var btnExitReading = document.getElementById('btn-exit-reading');
+    if (btnExitReading) {
+      btnExitReading.addEventListener('click', function() {
+        if (self.isReading) {
+          self._exitReadingMode();
+        }
+      });
+    }
+
     // Botão voltar do parabéns
     var congratsBtn = document.getElementById('btn-congrats-home');
     if (congratsBtn) {

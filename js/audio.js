@@ -275,7 +275,7 @@ window.CalmWrite = window.CalmWrite || {};
     lfoGain.gain.value = 200;
 
     var gainNode = this.ctx.createGain();
-    gainNode.gain.value = 0.25;
+    gainNode.gain.value = 0.12;
 
     lfo.connect(lfoGain);
     lfoGain.connect(filter1.frequency);
@@ -312,7 +312,7 @@ window.CalmWrite = window.CalmWrite || {};
     birdModGain.gain.value = 0.02;
 
     var mainGain = this.ctx.createGain();
-    mainGain.gain.value = 0.2;
+    mainGain.gain.value = 0.1;
 
     source.connect(filter);
     filter.connect(mainGain);
@@ -341,7 +341,7 @@ window.CalmWrite = window.CalmWrite || {};
     filter.frequency.value = 200;
 
     var gain = this.ctx.createGain();
-    gain.gain.value = 0.08;
+    gain.gain.value = 0.04;
 
     source.connect(filter);
     filter.connect(gain);
@@ -371,7 +371,7 @@ window.CalmWrite = window.CalmWrite || {};
     filter2.type = 'lowpass';
     filter2.frequency.value = 2000;
     var gain = this.ctx.createGain();
-    gain.gain.value = 0.12;
+    gain.gain.value = 0.06;
 
     source.connect(filter1);
     filter1.connect(filter2);
@@ -393,7 +393,7 @@ window.CalmWrite = window.CalmWrite || {};
       osc.frequency.value = freq;
       var gain = self.ctx.createGain();
       gain.gain.setValueAtTime(0, startTime);
-      gain.gain.linearRampToValueAtTime(0.15, startTime + 0.02);
+      gain.gain.linearRampToValueAtTime(0.07, startTime + 0.02);
       gain.gain.exponentialRampToValueAtTime(0.001, startTime + duration);
       osc.connect(gain);
       gain.connect(self.musicGain);
@@ -436,7 +436,7 @@ window.CalmWrite = window.CalmWrite || {};
     var nodes = [];
 
     var masterGain = this.ctx.createGain();
-    masterGain.gain.value = 0.3;
+    masterGain.gain.value = 0.15;
     masterGain.connect(this.musicGain);
 
     // Vinyl noise
@@ -450,7 +450,7 @@ window.CalmWrite = window.CalmWrite || {};
     vinylFilter.type = 'highpass';
     vinylFilter.frequency.value = 3000;
     var vinylGain = this.ctx.createGain();
-    vinylGain.gain.value = 0.15;
+    vinylGain.gain.value = 0.08;
     vinylSource.connect(vinylFilter);
     vinylFilter.connect(vinylGain);
     vinylGain.connect(masterGain);
@@ -468,7 +468,7 @@ window.CalmWrite = window.CalmWrite || {};
     padFilter.type = 'lowpass';
     padFilter.frequency.value = 400;
     var padGain = this.ctx.createGain();
-    padGain.gain.value = 0.06;
+    padGain.gain.value = 0.03;
     padOsc1.connect(padFilter);
     padOsc2.connect(padFilter);
     padFilter.connect(padGain);
@@ -482,7 +482,7 @@ window.CalmWrite = window.CalmWrite || {};
       kOsc.type = 'sine';
       kOsc.frequency.value = 80;
       var kGain = self.ctx.createGain();
-      kGain.gain.setValueAtTime(0.15, t);
+      kGain.gain.setValueAtTime(0.08, t);
       kGain.gain.exponentialRampToValueAtTime(0.001, t + 0.3);
       kOsc.connect(kGain);
       kGain.connect(masterGain);
@@ -501,7 +501,7 @@ window.CalmWrite = window.CalmWrite || {};
       sFilter.type = 'highpass';
       sFilter.frequency.value = 1000;
       var sGain = self.ctx.createGain();
-      sGain.gain.value = 0.08;
+      sGain.gain.value = 0.04;
       sSource.connect(sFilter);
       sFilter.connect(sGain);
       sGain.connect(masterGain);
@@ -556,7 +556,7 @@ window.CalmWrite = window.CalmWrite || {};
     var lfoGain = this.ctx.createGain();
     lfoGain.gain.value = 300;
     var gainNode = this.ctx.createGain();
-    gainNode.gain.value = 0.2;
+    gainNode.gain.value = 0.1;
 
     lfo.connect(lfoGain);
     lfoGain.connect(filter.frequency);
@@ -584,7 +584,7 @@ window.CalmWrite = window.CalmWrite || {};
     fireFilter.type = 'lowpass';
     fireFilter.frequency.value = 600;
     var fireGain = this.ctx.createGain();
-    fireGain.gain.value = 0.15;
+    fireGain.gain.value = 0.08;
     fireSource.connect(fireFilter);
     fireFilter.connect(fireGain);
     fireGain.connect(this.musicGain);
@@ -611,7 +611,7 @@ window.CalmWrite = window.CalmWrite || {};
             flt.type = 'bandpass';
             flt.frequency.value = 200 + Math.random() * 400;
             var gn = self.ctx.createGain();
-            gn.gain.value = 0.05 + Math.random() * 0.1;
+            gn.gain.value = 0.03 + Math.random() * 0.05;
             src.connect(flt);
             flt.connect(gn);
             gn.connect(self.musicGain);
