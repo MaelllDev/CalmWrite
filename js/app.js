@@ -22,6 +22,7 @@ window.CalmWrite = window.CalmWrite || {};
     
     this._setupAudioInit();
     this._setupSpotify();
+    this._setupPDFWorker();
     
     this.settings = new CalmWrite.SettingsManager();
     this.settings.init(CalmWrite.Storage.loadSettings());
@@ -53,6 +54,13 @@ window.CalmWrite = window.CalmWrite || {};
 
   CalmWriteApp.prototype._setupSpotify = function() {
     // Spotify é gerenciado via iframe direto, não precisa de init
+  };
+
+  /** Configura o worker do pdf.js uma única vez */
+  CalmWriteApp.prototype._setupPDFWorker = function() {
+    if (typeof pdfjsLib !== 'undefined') {
+      pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+    }
   };
 
   CalmWriteApp.prototype._setupAudioInit = function() {
@@ -96,6 +104,20 @@ window.CalmWrite = window.CalmWrite || {};
           e.preventDefault();
           self._startReading();
         }
+      });
+    }
+    
+    // --- PDF Import ---
+    var btnImportPdf = document.getElementById('btn-import-pdf');
+    var pdfInput = document.getElementById('pdf-input');
+    
+    if (btnImportPdf && pdfInput) {
+      btnImportPdf.addEventListener('click', function() {
+        pdfInput.click();
+      });
+      
+      pdfInput.addEventListener('change', function(e) {
+        self._importPDF(e.target);
       });
     }
     
@@ -154,6 +176,84 @@ window.CalmWrite = window.CalmWrite || {};
       // Usar a logo real do assets
       logoContainer.innerHTML = '<img src="assets/icons/logo1024.svg" alt="CalmWrite" width="80" height="80" style="width:80px;height:80px">';
     }
+  };
+
+  /**
+   * Importa um arquivo PDF e extrai o texto usando pdf.js
+   */
+  CalmWriteApp.prototype._importPDF = function(fileInput) {
+    var self = this;
+    var file = fileInput.files && fileInput.files[0];
+    
+    if (!file) return;
+    
+    if (file.type !== 'application/pdf') {
+      CalmWrite.UI.showToast('Por favor, selecione um arquivo PDF');
+      fileInput.value = '';
+      return;
+    }
+    
+    CalmWrite.UI.showToast('Lendo PDF...');
+    
+    var reader = new FileReader();
+    
+    reader.onload = function(e) {
+      var typedarray = new Uint8Array(e.target.result);
+      
+      // Carregar documento PDF
+      pdfjsLib.getDocument(typedarray).promise.then(function(pdf) {
+        var totalPages = pdf.numPages;
+        var extractedPages = [];
+        
+        // Extrair texto de cada página
+        var pagePromises = [];
+        for (var i = 1; i <= totalPages; i++) {
+          pagePromises.push(pdf.getPage(i).then(function(page) {
+            return page.getTextContent().then(function(textContent) {
+              var pageText = '';
+              for (var j = 0; j < textContent.items.length; j++) {
+                var item = textContent.items[j];
+                if (item.str) {
+                  pageText += item.str;
+                  // Adicionar espaço ou quebra de linha baseado na posição
+                  if (item.hasEOL) {
+                    pageText += '\n';
+                  } else {
+                    pageText += ' ';
+                  }
+                }
+              }
+              return pageText;
+            });
+          }));
+        }
+        
+        return Promise.all(pagePromises).then(function(pagesText) {
+          var fullText = pagesText.join('\n\n').trim();
+          
+          // Colocar o texto extraído no textarea
+          var textInput = document.getElementById('text-input');
+          if (textInput) {
+            textInput.value = fullText;
+            textInput.focus();
+          }
+          
+          CalmWrite.UI.showToast('PDF importado com sucesso! ' + totalPages + (totalPages === 1 ? ' página' : ' páginas'));
+          fileInput.value = '';
+        });
+      }).catch(function(err) {
+        console.error('Erro ao ler PDF:', err);
+        CalmWrite.UI.showToast('Erro ao ler o PDF. Verifique se o arquivo é válido.');
+        fileInput.value = '';
+      });
+    };
+    
+    reader.onerror = function() {
+      CalmWrite.UI.showToast('Erro ao ler o arquivo');
+      fileInput.value = '';
+    };
+    
+    reader.readAsArrayBuffer(file);
   };
 
   CalmWriteApp.prototype._checkPreviousSession = function() {

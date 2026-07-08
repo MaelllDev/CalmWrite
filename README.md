@@ -76,6 +76,11 @@ Ideal para:
 - Controles nativos (play/pause/pular/volume)
 - Volumes independentes da música ambiente
 
+### 📄 Importação de PDF
+- Importe arquivos PDF diretamente no navegador (via pdf.js)
+- O texto é extraído automaticamente e pode ser lido como qualquer outro
+- Funciona 100% offline depois do primeiro carregamento
+
 ### 💾 Salvamento automático
 - Progresso salvo no **LocalStorage**
 - Ao reabrir, pergunta se deseja **continuar de onde parou**
@@ -181,6 +186,10 @@ Criado por [**MaelllDev**](https://github.com/MaelllDev)
 
 - 🌐 Site: [CalmWrite](https://maellldev.github.io/CalmWrite/)
 - 🐙 GitHub: [@MaelllDev](https://github.com/MaelllDev)
+
+### 💡 Agradecimentos
+
+- **@amb3rkai** — pela sugestão de importação de PDF, que elevou o CalmWrite a outro nível 🚀
 
 ---
 

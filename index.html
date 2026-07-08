@@ -96,16 +96,30 @@
   <div id="text-modal-overlay" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="modal-title">
     <div class="modal">
       <div class="modal-header">
-        <h2 id="modal-title" class="modal-title">Cole ou escreva seu texto</h2>
+        <h2 id="modal-title" class="modal-title">Cole, escreva ou importe seu texto</h2>
       </div>
 
       <div class="modal-body">
-        <textarea id="text-input" placeholder="Cole seu texto aqui... (Ctrl+Enter para começar)" spellcheck="true" aria-label="Área de texto"></textarea>
+        <textarea id="text-input" placeholder="Cole seu texto aqui, importe um PDF ou digite... (Ctrl+Enter para começar)" spellcheck="true" aria-label="Área de texto"></textarea>
       </div>
 
       <div class="modal-footer">
-        <button id="btn-cancel-text" class="btn btn--ghost">Cancelar</button>
-        <button id="btn-process-text" class="btn btn--primary">Começar</button>
+        <div class="modal-footer-left">
+          <input type="file" id="pdf-input" accept=".pdf" aria-label="Selecionar arquivo PDF">
+          <button id="btn-import-pdf" class="btn btn--ghost btn--small">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+              <polyline points="14 2 14 8 20 8"/>
+              <line x1="12" y1="18" x2="12" y2="12"/>
+              <line x1="9" y1="15" x2="15" y2="15"/>
+            </svg>
+            Importar PDF
+          </button>
+        </div>
+        <div class="modal-footer-right">
+          <button id="btn-cancel-text" class="btn btn--ghost">Cancelar</button>
+          <button id="btn-process-text" class="btn btn--primary">Começar</button>
+        </div>
       </div>
     </div>
   </div>
@@ -380,6 +394,10 @@
           GitHub
         </a>
       </div>
+      <div class="credits-suggestion">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        Sugestão: <span>@amb3rkai</span>
+      </div>
     </div>
   </div>
 
@@ -428,6 +446,7 @@
   <!-- ============================================================
        SCRIPTS — Carregados em ordem (sem type=module para funcionar com file://)
        ============================================================ -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
   <script src="js/storage.js"></script>
   <script src="js/textProcessor.js"></script>
   <script src="js/audio.js"></script>
