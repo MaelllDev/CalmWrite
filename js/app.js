@@ -358,17 +358,7 @@ window.CalmWrite = window.CalmWrite || {};
   };
 
   CalmWriteApp.prototype._onReadingFinished = function() {
-    this.isReading = false;
-    if (this.navigation) this.navigation.destroy();
-    CalmWrite.Storage.clearSession();
-    CalmWrite.audioManager.stopAmbient();
-    
-    // Voltar pra home
-    CalmWrite.UI.switchScreen(CalmWrite.UI.elements.readingScreen, CalmWrite.UI.elements.homeScreen);
-    
-    if (CalmWrite.UI.elements.textInput) {
-      CalmWrite.UI.elements.textInput.value = '';
-    }
+    this._exitReadingMode();
   };
 
   CalmWriteApp.prototype._resumeSession = function(shouldResume) {
