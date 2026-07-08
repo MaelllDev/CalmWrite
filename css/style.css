@@ -373,6 +373,34 @@ body {
   line-height: 1.6;
 }
 
+.home-support {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: var(--space-lg);
+  padding: var(--space-xs) var(--space-md);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-full);
+  background: transparent;
+  color: var(--text-tertiary);
+  font-family: var(--font-body);
+  font-size: var(--font-size-xs);
+  text-decoration: none;
+  cursor: pointer;
+  transition: all var(--anim-normal) var(--anim-ease);
+}
+
+.home-support:hover {
+  background: var(--accent-glow);
+  border-color: var(--accent);
+  color: var(--accent-light);
+  transform: translateY(-1px);
+}
+
+.home-support svg {
+  flex-shrink: 0;
+}
+
 /* ----- BUTTONS ----- */
 .btn {
   display: inline-flex;
