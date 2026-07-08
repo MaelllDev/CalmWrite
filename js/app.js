@@ -33,6 +33,13 @@ window.CalmWrite = window.CalmWrite || {};
       if (self.navigation && ['animType', 'soundType'].indexOf(key) !== -1) {
         self.navigation.updateSettings(self.settings.getAll());
       }
+      // Atualizar blocos em tempo real quando palavras por bloco mudar
+      if (key === 'wordsPerBlock' && self.isReading && self.originalText) {
+        clearTimeout(self._reprocessTimer);
+        self._reprocessTimer = setTimeout(function() {
+          self._reprocessBlocks();
+        }, 100);
+      }
     });
     
     this.navigation.updateSettings(this.settings.getAll());
@@ -183,6 +190,37 @@ window.CalmWrite = window.CalmWrite || {};
     CalmWrite.UI.closeTextModal();
     
     this._enterReadingMode(blocks, 0);
+  };
+
+  /**
+   * Re-processa os blocos em tempo real quando wordsPerBlock muda
+   */
+  CalmWriteApp.prototype._reprocessBlocks = function() {
+    if (!this.isReading || !this.originalText || !this.navigation) return;
+    
+    var wordsPerBlock = this.settings ? this.settings.get('wordsPerBlock') || 0 : 0;
+    var newBlocks = CalmWrite.TextProcessor.processText(this.originalText, { wordsPerBlock: wordsPerBlock });
+    
+    if (!newBlocks || newBlocks.length === 0) return;
+    
+    // Tentar manter posição próxima
+    var oldIndex = this.navigation.currentIndex || 0;
+    var newIndex = Math.min(oldIndex, newBlocks.length - 1);
+    
+    this.navigation.blocks = newBlocks;
+    this.navigation.currentIndex = newIndex;
+    this.navigation.history = [];
+    
+    // Atualizar texto direto, sem animação (evita piscar durante drag do slider)
+    var blockEl = document.getElementById('reading-block');
+    if (blockEl) {
+      var blockText = newBlocks[newIndex] || '\u00A0';
+      blockEl.textContent = blockText;
+      blockEl.style.opacity = '1';
+      blockEl.style.transform = '';
+      blockEl.style.filter = '';
+    }
+    this.navigation.updateProgressBar();
   };
 
   CalmWriteApp.prototype._enterReadingMode = function(blocks, startIndex) {
